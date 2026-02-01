@@ -1,0 +1,39 @@
+<div class="page-container">
+  <div class="page-content">
+    <app-pokedex-tabs activeTab="types" />
+
+    @if (!authService.isLoggedIn()) {
+      <div class="auth-required">
+        <i class="fa fa-lock"></i>
+        <h2>Connexion requise</h2>
+        <p>Vous devez être connecté pour voir les types.</p>
+        <a routerLink="/login" class="button primary">Se connecter</a>
+      </div>
+    } @else if (loading()) {
+      <div class="loading">
+        <i class="fa fa-spinner fa-spin"></i> Chargement des types...
+      </div>
+    } @else if (error()) {
+      <div class="error-message">
+        <i class="fa fa-exclamation-triangle"></i> {{ error() }}
+      </div>
+    } @else {
+      <app-searchable-list
+        searchPlaceholder="Rechercher un type..."
+        [searchQuery]="searchQuery"
+        [totalCount]="types().length"
+        [filteredCount]="filteredTypes().length"
+        itemLabel="Types"
+        [columns]="columns"
+        [currentSort]="sortKey"
+        [sortDesc]="sortDesc"
+        (searchChange)="onSearchChange($event)"
+        (sortChange)="onSortChange($event)"
+      >
+        @for (type of sortedTypes(); track type.id) {
+          <app-type-list-item [type]="type" />
+        }
+      </app-searchable-list>
+    }
+  </div>
+</div>

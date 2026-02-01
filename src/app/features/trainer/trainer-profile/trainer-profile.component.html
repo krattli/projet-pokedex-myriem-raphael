@@ -1,0 +1,80 @@
+<div class="pfx-panel">
+  <div class="pfx-body">
+    <div class="profile-header">
+      <div class="avatar">
+        <i class="fa fa-user-circle"></i>
+      </div>
+      <div class="trainer-info">
+        <h1>{{ trainer()?.name || 'Dresseur' }}</h1>
+        <p class="email">{{ trainer()?.email }}</p>
+      </div>
+    </div>
+
+    @if (loading()) {
+      <div class="loading">
+        <i class="fa fa-spinner fa-spin"></i> Chargement des statistiques...
+      </div>
+    } @else {
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon"><i class="fa fa-trophy"></i></div>
+          <div class="stat-value">{{ captures().length }}</div>
+          <div class="stat-label">Pokémon capturés</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon"><i class="fa fa-star"></i></div>
+          <div class="stat-value">{{ uniquePokemons() }}</div>
+          <div class="stat-label">Pokémon uniques</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon"><i class="fa fa-tags"></i></div>
+          <div class="stat-value">{{ uniqueTypes() }}</div>
+          <div class="stat-label">Types différents</div>
+        </div>
+      </div>
+
+      @if (captures().length > 0) {
+        <div class="recent-captures">
+          <h2>Dernières captures</h2>
+          <div class="captures-preview">
+            @for (capture of recentCaptures(); track capture.id) {
+              @if (capture.pokemon) {
+                <a [routerLink]="['/pokedex', capture.pokemon.id]" class="capture-item">
+                  <img 
+                    [src]="getSpriteUrl(capture.pokemon.pokedexNumber)" 
+                    [alt]="capture.pokemon.name"
+                  >
+                  <span>{{ capture.pokemon.name }}</span>
+                </a>
+              }
+            }
+          </div>
+          <a routerLink="/captures" class="view-all">
+            Voir toutes mes captures <i class="fa fa-arrow-right"></i>
+          </a>
+        </div>
+      } @else {
+        <div class="no-captures">
+          <p>Vous n'avez pas encore capturé de Pokémon.</p>
+          <a routerLink="/pokedex" class="button">
+            <i class="fa fa-book"></i> Explorer le Pokédex
+          </a>
+        </div>
+      }
+
+      <div class="actions">
+        <a routerLink="/pokedex" class="button">
+          <i class="fa fa-book"></i> Pokédex
+        </a>
+        <a routerLink="/compare" class="button">
+          <i class="fa fa-balance-scale"></i> Comparer
+        </a>
+        <a routerLink="/captures" class="button">
+          <i class="fa fa-trophy"></i> Mes Captures
+        </a>
+      </div>
+    }
+  </div>
+</div>

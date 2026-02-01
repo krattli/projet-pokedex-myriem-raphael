@@ -1,0 +1,36 @@
+.stat-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 4px 0;
+}
+
+.stat-label {
+  width: 60px;
+  font-size: 11px;
+  font-weight: bold;
+  color: #555;
+  text-transform: uppercase;
+}
+
+.stat-value {
+  width: 30px;
+  font-size: 12px;
+  font-weight: bold;
+  text-align: right;
+  color: #333;
+}
+
+.stat-bar-container {
+  flex: 1;
+  height: 8px;
+  background: #ddd;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.stat-bar {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}

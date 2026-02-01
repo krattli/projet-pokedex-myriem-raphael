@@ -1,0 +1,56 @@
+<div class="detail-panel">
+  <button class="close-btn" (click)="close.emit()" title="Fermer">
+    <i class="fa fa-times"></i>
+  </button>
+
+  <div class="pokemon-header">
+    <div class="pokemon-sprite-container">
+      <img 
+        [src]="getSpriteUrl()" 
+        [alt]="pokemon.name"
+        class="pokemon-sprite"
+      >
+    </div>
+    
+    <div class="pokemon-info">
+      <span class="pokemon-number">#{{ pokemon.pokedexNumber.toString().padStart(3, '0') }}</span>
+      <h2 class="pokemon-name">{{ pokemon.name }}</h2>
+      <div class="pokemon-types">
+        @for (type of pokemon.types; track type.id) {
+          <app-type-badge [typeName]="type.name" />
+        }
+        @if (pokemon.types.length === 0) {
+          <span class="no-type">Type inconnu</span>
+        }
+      </div>
+    </div>
+  </div>
+
+  <div class="pokemon-stats">
+    <h3>Statistiques</h3>
+    <div class="stats-container">
+      <app-stat-bar label="PV" [value]="pokemon.hp" />
+      <app-stat-bar label="Attaque" [value]="pokemon.attack" />
+      <app-stat-bar label="Défense" [value]="pokemon.defense" />
+      <app-stat-bar label="Vitesse" [value]="pokemon.speed" />
+    </div>
+    
+    <div class="total-stats">
+      <strong>Total:</strong> {{ getTotalStats() }}
+    </div>
+  </div>
+
+  @if (authService.isLoggedIn()) {
+    <div class="actions">
+      @if (successMessage) {
+        <div class="success-message">
+          <i class="fa fa-check-circle"></i> {{ successMessage }}
+        </div>
+      } @else {
+        <button class="capture-btn" (click)="capture()">
+          <i class="fa fa-crosshairs"></i> Capturer
+        </button>
+      }
+    </div>
+  }
+</div>

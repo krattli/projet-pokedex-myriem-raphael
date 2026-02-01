@@ -1,0 +1,13 @@
+<div class="type-row">
+  <span class="col badgecol">
+    <img 
+      [src]="getTypeImageUrl()" 
+      [alt]="type.name" 
+      height="20" 
+      width="56" 
+      class="type-img"
+      (error)="onImgError($event)"
+    >
+  </span>
+  <span class="col namecol" [style.color]="getColor()">{{ type.name }}</span>
+</div>

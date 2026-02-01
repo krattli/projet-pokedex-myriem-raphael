@@ -1,0 +1,37 @@
+.sort-row {
+  display: flex;
+  background: linear-gradient(to bottom, #6688aa, #4c6a8c);
+  padding: 6px 8px;
+  border-radius: 5px 5px 0 0;
+}
+
+.sortcol {
+  padding: 4px 8px;
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 11px;
+  font-weight: bold;
+  cursor: pointer;
+  text-align: center;
+  transition: background-color 0.1s;
+}
+
+.sortcol.sortable:hover {
+  background: rgba(255,255,255,0.1);
+}
+
+.sortcol.cur {
+  background: rgba(255,255,255,0.2);
+  border-radius: 3px;
+}
+
+.sortcol:disabled {
+  cursor: default;
+  opacity: 0.8;
+}
+
+.sortcol i {
+  margin-left: 4px;
+  font-size: 10px;
+}

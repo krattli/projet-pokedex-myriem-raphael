@@ -1,0 +1,40 @@
+<div class="pokemon-row" [class.selected]="isSelected" (click)="onSelect()">
+  <span class="col numcol">#{{ pokemon.pokedexNumber.toString().padStart(3, '0') }}</span>
+  <span class="col iconcol">
+    <img 
+      [src]="getSpriteUrl()" 
+      [alt]="pokemon.name"
+      class="pokemon-icon"
+      loading="lazy"
+      (error)="onIconError($event)"
+    >
+  </span>
+  <span class="col pokemonnamecol">{{ pokemon.name }}</span>
+  <span class="col typecol">
+    @for (type of pokemon.types; track type.id) {
+      <img 
+        [src]="getTypeImageUrl(type.name)" 
+        [alt]="type.name" 
+        height="14" 
+        width="32" 
+        class="pixelated"
+        (error)="onTypeImgError($event)"
+      >
+    }
+    @if (pokemon.types.length === 0) {
+      <span class="no-type">—</span>
+    }
+  </span>
+  <span class="col statcol"><em>HP</em><br>{{ pokemon.hp }}</span>
+  <span class="col statcol"><em>Atk</em><br>{{ pokemon.attack }}</span>
+  <span class="col statcol"><em>Def</em><br>{{ pokemon.defense }}</span>
+  <span class="col statcol"><em>Spe</em><br>{{ pokemon.speed }}</span>
+  <span class="col bstcol"><em>BST</em><br>{{ getBST() }}</span>
+  @if (showCaptureButton) {
+    <span class="col actioncol">
+      <button class="capture-btn" (click)="onCapture($event)" title="Capturer">
+        <i class="fa fa-plus-circle"></i>
+      </button>
+    </span>
+  }
+</div>

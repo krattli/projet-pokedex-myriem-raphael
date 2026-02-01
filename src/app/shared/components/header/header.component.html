@@ -1,0 +1,43 @@
+<header class="header">
+  <div class="header-left">
+    <a routerLink="/" class="logo">
+      <img src="https://play.pokemonshowdown.com/pokemonshowdownbeta.png" alt="Pokemon" class="logo-img">
+    </a>
+  </div>
+  
+  <nav class="header-nav">
+    <a routerLink="/" class="nav-button">
+      <i class="fa fa-home"></i> Accueil
+    </a>
+    <a routerLink="/pokedex" class="nav-button">
+      <i class="fa fa-book"></i> Pokédex
+    </a>
+    @if (authService.isLoggedIn()) {
+      <a routerLink="/compare" class="nav-button">
+        <i class="fa fa-balance-scale"></i> Comparer
+      </a>
+      <a routerLink="/captures" class="nav-button">
+        <i class="fa fa-trophy"></i> Captures
+      </a>
+    }
+  </nav>
+
+  <div class="header-right">
+    @if (authService.isLoggedIn()) {
+      <a routerLink="/profile" class="trainer-link">
+        <i class="fa fa-user-circle"></i>
+        <span class="trainer-name">{{ authService.currentTrainer()?.name }}</span>
+      </a>
+      <button class="nav-button logout-btn" (click)="logout()">
+        <i class="fa fa-sign-out"></i>
+      </button>
+    } @else {
+      <a routerLink="/login" class="nav-button">
+        <i class="fa fa-sign-in"></i> Connexion
+      </a>
+      <a routerLink="/register" class="nav-button register-btn">
+        <i class="fa fa-user-plus"></i> Inscription
+      </a>
+    }
+  </div>
+</header>

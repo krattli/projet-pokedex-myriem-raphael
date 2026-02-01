@@ -1,0 +1,20 @@
+<a [routerLink]="['/pokedex', pokemon.id]" class="pokemon-card">
+  <div class="pokemon-number">#{{ pokemon.pokedexNumber.toString().padStart(3, '0') }}</div>
+  <img 
+    [src]="getSpriteUrl()" 
+    [alt]="pokemon.name"
+    class="pokemon-sprite"
+    loading="lazy"
+  >
+  <div class="pokemon-name">{{ pokemon.name }}</div>
+  <div class="pokemon-types">
+    @for (type of pokemon.types; track type.id) {
+      <app-type-badge [typeName]="type.name" />
+    }
+  </div>
+  @if (showCaptureButton) {
+    <button class="capture-btn" (click)="onCapture($event)">
+      <i class="fa fa-crosshairs"></i> Capturer
+    </button>
+  }
+</a>

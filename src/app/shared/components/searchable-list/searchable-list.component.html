@@ -1,0 +1,39 @@
+<div class="list-container">
+  <!-- Search bar intégrée -->
+  <div class="search-header">
+    <div class="search-input-wrapper">
+      <i class="fa fa-search"></i>
+      <input 
+        type="search" 
+        class="search-input" 
+        [placeholder]="searchPlaceholder"
+        [ngModel]="searchQuery"
+        (ngModelChange)="onSearchChange($event)"
+      >
+    </div>
+    <div class="result-count">
+      {{ filteredCount }} / {{ totalCount }} {{ itemLabel }}
+    </div>
+  </div>
+
+  <!-- Header triable -->
+  @if (columns.length > 0) {
+    <app-sortable-list-header
+      [columns]="columns"
+      [currentSort]="currentSort"
+      [sortDesc]="sortDesc"
+      (sortChange)="onSortChange($event)"
+    />
+  }
+
+  <!-- Liste des items (projection de contenu) -->
+  <div class="list-body">
+    <ng-content></ng-content>
+    
+    @if (filteredCount === 0 && searchQuery) {
+      <div class="no-results">
+        Aucun résultat pour "{{ searchQuery }}"
+      </div>
+    }
+  </div>
+</div>

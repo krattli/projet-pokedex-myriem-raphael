@@ -1,0 +1,166 @@
+<div class="page-container">
+  <div class="page-content">
+    <app-pokedex-tabs activeTab="captures" />
+
+    @if (!authService.isLoggedIn()) {
+      <div class="auth-required">
+        <i class="fa fa-lock"></i>
+        <h2>Connexion requise</h2>
+        <p>Vous devez être connecté pour voir les captures.</p>
+        <a routerLink="/login" class="button primary">Se connecter</a>
+      </div>
+    } @else {
+      <!-- Sous-onglets pour le mode de vue -->
+      <div class="tabs-section">
+        <button 
+          class="tab-btn" 
+          [class.active]="viewMode() === 'my'"
+          (click)="setViewMode('my')"
+        >
+          <i class="fa fa-user"></i> Mes captures
+        </button>
+        <button 
+          class="tab-btn" 
+          [class.active]="viewMode() === 'all'"
+          (click)="setViewMode('all')"
+        >
+          <i class="fa fa-globe"></i> Toutes
+        </button>
+        <button 
+          class="tab-btn" 
+          [class.active]="viewMode() === 'recent'"
+          (click)="setViewMode('recent')"
+        >
+          <i class="fa fa-clock-o"></i> Récentes (JMS)
+        </button>
+      </div>
+
+      @if (loading()) {
+        <div class="loading">
+          <i class="fa fa-spinner fa-spin"></i> Chargement...
+        </div>
+      } @else if (error()) {
+        <div class="error-message">
+          <i class="fa fa-exclamation-triangle"></i> {{ error() }}
+        </div>
+      } @else {
+        @if (viewMode() === 'recent') {
+          <!-- JMS Messages -->
+          @if (jmsCaptures().length === 0) {
+            <div class="empty-state">
+              <div class="empty-icon">📡</div>
+              <h2>Aucun message récent</h2>
+              <p>Le service JMS n'a pas encore enregistré de captures.</p>
+            </div>
+          } @else {
+            <div class="list-container">
+              <div class="search-header">
+                <div class="search-input-wrapper">
+                  <i class="fa fa-search"></i>
+                  <input 
+                    type="search" 
+                    class="search-input" 
+                    placeholder="Rechercher..."
+                    [(ngModel)]="searchQuery"
+                  >
+                </div>
+                <div class="result-count">
+                  {{ filteredJmsCaptures().length }} / {{ jmsCaptures().length }} messages
+                </div>
+              </div>
+              <div class="list-header jms-header">
+                <span class="col" style="width:50px">Icon</span>
+                <span class="col" style="flex:1">Pokémon</span>
+                <span class="col" style="width:150px">Dresseur</span>
+                <span class="col" style="width:180px">Date</span>
+              </div>
+              @for (msg of filteredJmsCaptures(); track msg.captureDate + msg.pokemonId) {
+                <div class="jms-row">
+                  <span class="col" style="width:50px;text-align:center">
+                    <img 
+                      [src]="getPokeApiSprite(msg.pokemonId)" 
+                      [alt]="msg.pokemonName"
+                      class="pokemon-icon"
+                      loading="lazy"
+                      (error)="onIconError($event)"
+                    >
+                  </span>
+                  <span class="col" style="flex:1;font-weight:bold">{{ msg.pokemonName }}</span>
+                  <span class="col" style="width:150px;color:#666">
+                    <i class="fa fa-user"></i> {{ msg.trainerName }}
+                  </span>
+                  <span class="col" style="width:180px;color:#888;font-size:12px">
+                    <i class="fa fa-calendar"></i> {{ formatDate(msg.captureDate) }}
+                  </span>
+                </div>
+              }
+              @if (filteredJmsCaptures().length === 0 && searchQuery) {
+                <div class="no-results">
+                  Aucun résultat pour "{{ searchQuery }}"
+                </div>
+              }
+            </div>
+          }
+        } @else {
+          <!-- Regular Captures -->
+          @if (captures().length === 0) {
+            <div class="empty-state">
+              <div class="empty-icon">📦</div>
+              <h2>Aucune capture</h2>
+              <p>{{ viewMode() === 'my' ? 'Vous n\'avez pas encore capturé de Pokémon.' : 'Aucune capture enregistrée.' }}</p>
+              <a routerLink="/pokedex" class="button">
+                <i class="fa fa-book"></i> Explorer le Pokédex
+              </a>
+            </div>
+          } @else {
+            <div class="list-container">
+              <div class="search-header">
+                <div class="search-input-wrapper">
+                  <i class="fa fa-search"></i>
+                  <input 
+                    type="search" 
+                    class="search-input" 
+                    placeholder="Rechercher..."
+                    [(ngModel)]="searchQuery"
+                  >
+                </div>
+                <div class="result-count">
+                  {{ filteredCaptures().length }} / {{ captures().length }} captures
+                </div>
+              </div>
+              
+              <app-sortable-list-header
+                [columns]="captureColumns"
+                [currentSort]="sortKey"
+                [sortDesc]="sortDesc"
+                (sortChange)="onSortChange($event)"
+              />
+              
+              @for (capture of sortedCaptures(); track capture.id) {
+                <app-capture-list-item
+                  [capture]="capture"
+                  [showTrainer]="viewMode() === 'all'"
+                  [showReleaseButton]="viewMode() === 'my'"
+                  (release)="releasePokemon($event)"
+                />
+              }
+              @if (sortedCaptures().length === 0 && searchQuery) {
+                <div class="no-results">
+                  Aucune capture ne correspond à "{{ searchQuery }}"
+                </div>
+              }
+            </div>
+            
+            @if (backendWarning()) {
+              <div class="warning-message">
+                <i class="fa fa-info-circle"></i>
+                Note: Le backend ne retourne pas les détails des Pokémon. 
+                Seules les dates et IDs sont disponibles.
+              </div>
+            }
+          }
+        }
+      }
+    }
+  </div>
+</div>

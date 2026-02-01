@@ -1,0 +1,127 @@
+.page-container {
+  min-height: 100%;
+  background: #e8e8e8;
+}
+
+.page-content {
+  max-width: 740px;
+  margin: 0 auto;
+  padding: 20px;
+  transition: max-width 0.6s ease-out;
+}
+
+.page-content:has(.split-view.has-detail) {
+  max-width: 1100px;
+}
+
+.auth-required {
+  text-align: center;
+  padding: 60px 20px;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+.auth-required i {
+  font-size: 48px;
+  color: #999;
+  margin-bottom: 16px;
+  display: block;
+}
+
+.auth-required h2 {
+  margin: 0 0 8px;
+  color: #555;
+}
+
+.auth-required p {
+  margin: 0 0 20px;
+  color: #777;
+}
+
+.button.primary {
+  display: inline-flex;
+  align-items: center;
+  padding: 10px 24px;
+  background: linear-gradient(to bottom, #6688aa, #4c6a8c);
+  border: 1px solid #3a5a7a;
+  border-radius: 5px;
+  color: white;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.success-message {
+  background: #dfd;
+  border: 1px solid #afa;
+  color: #060;
+  padding: 12px;
+  border-radius: 5px;
+  margin-bottom: 16px;
+  text-align: center;
+  font-size: 14px;
+}
+
+.error-message {
+  background: #fee;
+  border: 1px solid #fcc;
+  color: #c00;
+  padding: 12px;
+  border-radius: 5px;
+  text-align: center;
+}
+
+.loading {
+  text-align: center;
+  padding: 60px;
+  color: #666;
+  font-size: 16px;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+/* Split view layout */
+.split-view {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+.list-panel {
+  flex: 0 0 700px;
+  min-width: 0;
+  transform: translateX(0);
+  transition: transform 0.6s ease-out;
+}
+
+.detail-panel-wrapper {
+  flex: 0 0 340px;
+  position: sticky;
+  top: 20px;
+  animation: slideFromRight 0.6s ease-out forwards;
+}
+
+@keyframes slideFromRight {
+  from {
+    transform: translateX(calc(100% + 220px));
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .split-view {
+    flex-direction: column;
+  }
+
+  .detail-panel-wrapper {
+    flex: 1;
+    position: static;
+    width: 100%;
+  }
+}

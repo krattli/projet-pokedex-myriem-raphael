@@ -1,0 +1,67 @@
+<div class="page-container">
+  <div class="page-content">
+    <app-pokedex-tabs activeTab="pokemon" />
+
+    @if (!authService.isLoggedIn()) {
+      <div class="auth-required">
+        <i class="fa fa-lock"></i>
+        <h2>Connexion requise</h2>
+        <p>Vous devez être connecté pour accéder au Pokédex.</p>
+        <a routerLink="/login" class="button primary">Se connecter</a>
+      </div>
+    } @else if (loading()) {
+      <div class="loading">
+        <i class="fa fa-spinner fa-spin"></i> Chargement des Pokémon...
+      </div>
+    } @else if (error()) {
+      <div class="error-message">
+        <i class="fa fa-exclamation-triangle"></i> {{ error() }}
+      </div>
+    } @else {
+      @if (successMessage()) {
+        <div class="success-message">
+          <i class="fa fa-check-circle"></i> {{ successMessage() }}
+        </div>
+      }
+
+      <div class="split-view" [class.has-detail]="selectedPokemon()">
+        <!-- Liste des Pokémon -->
+        <div class="list-panel">
+          <app-searchable-list
+            searchPlaceholder="Rechercher par nom ou numéro..."
+            [searchQuery]="searchQuery()"
+            [totalCount]="pokemons().length"
+            [filteredCount]="filteredPokemons().length"
+            itemLabel="Pokémon"
+            [columns]="columns"
+            [currentSort]="sortKey()"
+            [sortDesc]="sortDesc()"
+            (searchChange)="onSearchChange($event)"
+            (sortChange)="onSortChange($event)"
+          >
+            @for (pokemon of sortedPokemons(); track pokemon.id) {
+              <app-pokemon-list-item 
+                [pokemon]="pokemon"
+                [showCaptureButton]="!selectedPokemon()"
+                [isSelected]="selectedPokemon()?.id === pokemon.id"
+                (select)="selectPokemon($event)"
+                (capture)="capturePokemon($event)"
+              />
+            }
+          </app-searchable-list>
+        </div>
+
+        <!-- Panel de détail -->
+        @if (selectedPokemon()) {
+          <div class="detail-panel-wrapper">
+            <app-pokemon-detail-panel
+              [pokemon]="selectedPokemon()!"
+              (close)="closePokemon()"
+              (captured)="onPokemonCaptured($event)"
+            />
+          </div>
+        }
+      </div>
+    }
+  </div>
+</div>

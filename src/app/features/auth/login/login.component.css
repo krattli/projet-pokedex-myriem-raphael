@@ -1,0 +1,103 @@
+.pfx-panel {
+  padding: 20px;
+}
+
+.pfx-body {
+  margin: 0 auto;
+  max-width: 400px;
+}
+
+.auth-form {
+  background: linear-gradient(to bottom, #f8f8f8, #e8e8e8);
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 24px;
+}
+
+h1 {
+  margin: 0 0 20px;
+  text-align: center;
+  color: #333;
+  font-family: Verdana, sans-serif;
+}
+
+.error-message {
+  background: #fee;
+  border: 1px solid #fcc;
+  color: #c00;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 16px;
+  font-size: 13px;
+}
+
+.form-group {
+  margin-bottom: 16px;
+}
+
+label {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 12px;
+  font-weight: bold;
+  color: #555;
+  font-family: Verdana, sans-serif;
+}
+
+.textbox {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #aaa;
+  border-radius: 4px;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+.textbox:focus {
+  outline: none;
+  border-color: #6688aa;
+  box-shadow: 0 0 4px rgba(102, 136, 170, 0.4);
+}
+
+.buttonbar {
+  text-align: center;
+  margin: 20px 0 16px;
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 24px;
+  background: linear-gradient(to bottom, #6688aa, #4c6a8c);
+  border: 1px solid #3a5a7a;
+  border-radius: 5px;
+  color: white;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.button:hover:not(:disabled) {
+  background: linear-gradient(to bottom, #7799bb, #5c7a9c);
+}
+
+.button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.form-footer {
+  text-align: center;
+  font-size: 13px;
+  color: #666;
+}
+
+.form-footer a {
+  color: #6688aa;
+  text-decoration: none;
+}
+
+.form-footer a:hover {
+  text-decoration: underline;
+}

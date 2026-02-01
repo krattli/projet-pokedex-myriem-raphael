@@ -1,0 +1,76 @@
+<div class="pfx-panel">
+  <div class="pfx-body">
+    @if (loading()) {
+      <div class="loading">
+        <i class="fa fa-spinner fa-spin"></i> Chargement...
+      </div>
+    } @else if (pokemon()) {
+      <div class="pokemon-detail">
+        <a routerLink="/pokedex" class="back-link">
+          <i class="fa fa-arrow-left"></i> Retour au Pokédex
+        </a>
+
+        <div class="pokemon-header">
+          <div class="pokemon-info">
+            <span class="pokemon-number">#{{ pokemon()!.pokedexNumber.toString().padStart(3, '0') }}</span>
+            <h1 class="pokemon-name">{{ pokemon()!.name }}</h1>
+            <div class="pokemon-types">
+              @for (type of pokemon()!.types; track type.id) {
+                <app-type-badge [typeName]="type.name" />
+              }
+              @if (pokemon()!.types.length === 0) {
+                <span class="no-type">Type inconnu</span>
+              }
+            </div>
+          </div>
+          
+          <div class="pokemon-sprite-container">
+            <img 
+              [src]="getSpriteUrl()" 
+              [alt]="pokemon()!.name"
+              class="pokemon-sprite"
+            >
+          </div>
+        </div>
+
+        <div class="pokemon-stats">
+          <h2>Statistiques</h2>
+          <div class="stats-container">
+            <app-stat-bar label="PV" [value]="pokemon()!.hp" />
+            <app-stat-bar label="Attaque" [value]="pokemon()!.attack" />
+            <app-stat-bar label="Défense" [value]="pokemon()!.defense" />
+            <app-stat-bar label="Vitesse" [value]="pokemon()!.speed" />
+          </div>
+          
+          <div class="total-stats">
+            <strong>Total:</strong> {{ getTotalStats() }}
+          </div>
+        </div>
+
+        @if (authService.isLoggedIn()) {
+          <div class="actions">
+            @if (successMessage()) {
+              <div class="success-message">
+                <i class="fa fa-check-circle"></i> {{ successMessage() }}
+              </div>
+            } @else {
+              <button class="capture-btn" (click)="capture()">
+                <i class="fa fa-crosshairs"></i> Capturer {{ pokemon()!.name }}
+              </button>
+            }
+          </div>
+        } @else {
+          <div class="login-prompt">
+            <a routerLink="/login">Connectez-vous</a> pour capturer ce Pokémon
+          </div>
+        }
+      </div>
+    } @else {
+      <div class="not-found">
+        <h2>Pokémon non trouvé</h2>
+        <p>Ce Pokémon n'existe pas dans notre base de données.</p>
+        <a routerLink="/pokedex" class="button">Retour au Pokédex</a>
+      </div>
+    }
+  </div>
+</div>

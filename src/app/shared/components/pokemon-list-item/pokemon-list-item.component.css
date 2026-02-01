@@ -1,0 +1,111 @@
+.pokemon-row {
+  display: flex;
+  align-items: center;
+  padding: 4px 8px;
+  text-decoration: none;
+  color: inherit;
+  border-bottom: 1px solid #ddd;
+  transition: background-color 0.1s;
+  background: white;
+  cursor: pointer;
+}
+
+.pokemon-row:hover {
+  background-color: #e8f4ff;
+}
+
+.pokemon-row.selected {
+  background-color: #cce5ff;
+  border-left: 3px solid #6688aa;
+}
+
+.col {
+  padding: 2px 4px;
+  font-size: 12px;
+}
+
+.numcol {
+  width: 50px;
+  color: #888;
+  font-family: monospace;
+  text-align: center;
+}
+
+.iconcol {
+  width: 50px;
+  text-align: center;
+}
+
+.pokemon-icon {
+  width: 40px;
+  height: 40px;
+  image-rendering: pixelated;
+  vertical-align: middle;
+}
+
+.pokemonnamecol {
+  flex: 1;
+  font-weight: bold;
+  min-width: 120px;
+}
+
+.typecol {
+  width: 80px;
+  display: flex;
+  gap: 2px;
+}
+
+.typecol img {
+  vertical-align: middle;
+}
+
+.no-type {
+  color: #999;
+  font-size: 11px;
+}
+
+.statcol {
+  width: 45px;
+  text-align: center;
+}
+
+.statcol em {
+  font-size: 9px;
+  color: #888;
+  font-style: normal;
+}
+
+.bstcol {
+  width: 50px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.bstcol em {
+  font-size: 9px;
+  color: #888;
+  font-style: normal;
+}
+
+.actioncol {
+  width: 40px;
+  text-align: center;
+}
+
+.capture-btn {
+  padding: 4px 8px;
+  background: linear-gradient(to bottom, #5ca05c, #4a8f4a);
+  border: 1px solid #3a7f3a;
+  border-radius: 3px;
+  color: white;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.capture-btn:hover {
+  background: linear-gradient(to bottom, #6cb06c, #5a9f5a);
+}
+
+.pixelated {
+  image-rendering: pixelated;
+}

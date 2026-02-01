@@ -1,0 +1,61 @@
+.page-container {
+  min-height: 100%;
+  background: #e8e8e8;
+}
+
+.page-content {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.auth-required {
+  text-align: center;
+  padding: 60px 20px;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+.auth-required i {
+  font-size: 48px;
+  color: #999;
+  margin-bottom: 16px;
+  display: block;
+}
+
+.auth-required h2 {
+  margin: 0 0 8px;
+  color: #555;
+}
+
+.auth-required p {
+  margin: 0 0 20px;
+  color: #777;
+}
+
+.button.primary {
+  display: inline-flex;
+  padding: 10px 24px;
+  background: linear-gradient(to bottom, #6688aa, #4c6a8c);
+  border: 1px solid #3a5a7a;
+  border-radius: 5px;
+  color: white;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.loading, .error-message {
+  text-align: center;
+  padding: 60px;
+  color: #666;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+.error-message {
+  background: #fee;
+  border-color: #fcc;
+  color: #c00;
+}

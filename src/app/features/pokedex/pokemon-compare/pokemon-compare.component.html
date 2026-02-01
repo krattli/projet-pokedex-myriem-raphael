@@ -1,0 +1,193 @@
+<div class="page-container">
+  <div class="page-content">
+    <!-- Header avec retour -->
+    <div class="page-header">
+      <a routerLink="/pokedex" class="back-link">
+        <i class="fa fa-arrow-left"></i> Retour au Pokédex
+      </a>
+      <h1><i class="fa fa-balance-scale"></i> Comparer des Pokémon</h1>
+      <p>Sélectionnez au moins 2 Pokémon pour comparer leurs statistiques</p>
+    </div>
+
+    @if (loading()) {
+      <div class="loading">
+        <i class="fa fa-spinner fa-spin"></i> Chargement...
+      </div>
+    } @else {
+      <!-- Section de sélection améliorée -->
+      <div class="selection-section">
+        <div class="search-box">
+          <i class="fa fa-search"></i>
+          <input 
+            type="text" 
+            class="search-input"
+            placeholder="Rechercher un Pokémon à ajouter..."
+            [ngModel]="searchQuery()"
+            (ngModelChange)="onSearchChange($event)"
+            (focus)="showDropdown = true"
+          >
+          @if (searchQuery()) {
+            <button class="clear-btn" (click)="clearSearch()">
+              <i class="fa fa-times"></i>
+            </button>
+          }
+        </div>
+
+        <!-- Dropdown de recherche -->
+        @if (showDropdown && filteredPokemons().length > 0) {
+          <div class="search-dropdown">
+            @for (pokemon of filteredPokemons().slice(0, 8); track pokemon.id) {
+              <button class="dropdown-item" (click)="addPokemon(pokemon)">
+                <img [src]="getSpriteUrl(pokemon.pokedexNumber)" [alt]="pokemon.name">
+                <span class="pokemon-num">#{{ pokemon.pokedexNumber.toString().padStart(3, '0') }}</span>
+                <span class="pokemon-name">{{ pokemon.name }}</span>
+                <span class="pokemon-types">
+                  @for (type of pokemon.types; track type.id) {
+                    <img [src]="getTypeImgUrl(type.name)" [alt]="type.name" class="type-img">
+                  }
+                </span>
+              </button>
+            }
+            @if (filteredPokemons().length > 8) {
+              <div class="dropdown-more">
+                + {{ filteredPokemons().length - 8 }} autres résultats
+              </div>
+            }
+          </div>
+        }
+
+        @if (showDropdown && searchQuery() && filteredPokemons().length === 0) {
+          <div class="search-dropdown">
+            <div class="dropdown-empty">
+              Aucun Pokémon disponible pour "{{ searchQuery() }}"
+            </div>
+          </div>
+        }
+
+        <!-- Pokémon sélectionnés -->
+        @if (selectedPokemons().length > 0) {
+          <div class="selected-section">
+            <h3>Pokémon sélectionnés ({{ selectedPokemons().length }})</h3>
+            <div class="selected-grid">
+              @for (pokemon of selectedPokemons(); track pokemon.id) {
+                <div class="selected-card">
+                  <button class="remove-btn" (click)="removePokemon(pokemon.id)" title="Retirer">
+                    <i class="fa fa-times"></i>
+                  </button>
+                  <img [src]="getSpriteUrl(pokemon.pokedexNumber)" [alt]="pokemon.name">
+                  <div class="card-info">
+                    <span class="card-num">#{{ pokemon.pokedexNumber.toString().padStart(3, '0') }}</span>
+                    <span class="card-name">{{ pokemon.name }}</span>
+                  </div>
+                </div>
+              }
+            </div>
+
+            <div class="compare-actions">
+              <button class="clear-all-btn" (click)="clearAll()">
+                <i class="fa fa-trash"></i> Tout effacer
+              </button>
+              <button 
+                class="compare-btn" 
+                (click)="compare()" 
+                [disabled]="selectedPokemons().length < 2 || comparing()"
+              >
+                @if (comparing()) {
+                  <i class="fa fa-spinner fa-spin"></i>
+                } @else {
+                  <i class="fa fa-balance-scale"></i>
+                }
+                Comparer
+              </button>
+            </div>
+          </div>
+        } @else {
+          <div class="empty-selection">
+            <i class="fa fa-info-circle"></i>
+            Utilisez la barre de recherche ci-dessus pour ajouter des Pokémon
+          </div>
+        }
+      </div>
+
+      <!-- Résultats de comparaison -->
+      @if (comparison()) {
+        <div class="comparison-results">
+          <h2>Résultats de la comparaison</h2>
+          
+          <div class="comparison-table">
+            <div class="comparison-header">
+              <div class="stat-name">Stat</div>
+              @for (pokemon of comparison()!.pokemons; track pokemon.id) {
+                <div class="pokemon-col">
+                  <img [src]="getSpriteUrl(pokemon.pokedexNumber)" [alt]="pokemon.name">
+                  <span>{{ pokemon.name }}</span>
+                </div>
+              }
+              <div class="stat-summary">Min / Max / Moy</div>
+            </div>
+
+            <div class="comparison-row">
+              <div class="stat-name">PV</div>
+              @for (pokemon of comparison()!.pokemons; track pokemon.id) {
+                <div class="pokemon-col" [class.best]="pokemon.hp === comparison()!.stats.maxHp" [class.worst]="pokemon.hp === comparison()!.stats.minHp">
+                  {{ pokemon.hp }}
+                </div>
+              }
+              <div class="stat-summary">
+                {{ comparison()!.stats.minHp }} / {{ comparison()!.stats.maxHp }} / {{ comparison()!.stats.avgHp | number:'1.0-0' }}
+              </div>
+            </div>
+
+            <div class="comparison-row">
+              <div class="stat-name">Attaque</div>
+              @for (pokemon of comparison()!.pokemons; track pokemon.id) {
+                <div class="pokemon-col" [class.best]="pokemon.attack === comparison()!.stats.maxAttack" [class.worst]="pokemon.attack === comparison()!.stats.minAttack">
+                  {{ pokemon.attack }}
+                </div>
+              }
+              <div class="stat-summary">
+                {{ comparison()!.stats.minAttack }} / {{ comparison()!.stats.maxAttack }} / {{ comparison()!.stats.avgAttack | number:'1.0-0' }}
+              </div>
+            </div>
+
+            <div class="comparison-row">
+              <div class="stat-name">Défense</div>
+              @for (pokemon of comparison()!.pokemons; track pokemon.id) {
+                <div class="pokemon-col" [class.best]="pokemon.defense === comparison()!.stats.maxDefense" [class.worst]="pokemon.defense === comparison()!.stats.minDefense">
+                  {{ pokemon.defense }}
+                </div>
+              }
+              <div class="stat-summary">
+                {{ comparison()!.stats.minDefense }} / {{ comparison()!.stats.maxDefense }} / {{ comparison()!.stats.avgDefense | number:'1.0-0' }}
+              </div>
+            </div>
+
+            <div class="comparison-row">
+              <div class="stat-name">Vitesse</div>
+              @for (pokemon of comparison()!.pokemons; track pokemon.id) {
+                <div class="pokemon-col" [class.best]="pokemon.speed === comparison()!.stats.maxSpeed" [class.worst]="pokemon.speed === comparison()!.stats.minSpeed">
+                  {{ pokemon.speed }}
+                </div>
+              }
+              <div class="stat-summary">
+                {{ comparison()!.stats.minSpeed }} / {{ comparison()!.stats.maxSpeed }} / {{ comparison()!.stats.avgSpeed | number:'1.0-0' }}
+              </div>
+            </div>
+
+            <div class="comparison-row total-row">
+              <div class="stat-name">Total</div>
+              @for (pokemon of comparison()!.pokemons; track pokemon.id) {
+                <div class="pokemon-col" [class.best]="getTotal(pokemon) === getMaxTotal()" [class.worst]="getTotal(pokemon) === getMinTotal()">
+                  {{ getTotal(pokemon) }}
+                </div>
+              }
+              <div class="stat-summary">
+                {{ getMinTotal() }} / {{ getMaxTotal() }} / {{ getAvgTotal() | number:'1.0-0' }}
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+    }
+  </div>
+</div>

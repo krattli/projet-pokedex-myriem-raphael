@@ -1,0 +1,53 @@
+<div class="capture-row">
+  <span class="col iconcol">
+    @if (capture.pokemon) {
+      <a [routerLink]="['/pokedex', capture.pokemon.id]">
+        <img 
+          [src]="getSpriteUrl()" 
+          [alt]="capture.pokemon.name"
+          class="pokemon-sprite"
+          loading="lazy"
+        >
+      </a>
+    } @else {
+      <div class="placeholder-icon">
+        <i class="fa fa-question"></i>
+      </div>
+    }
+  </span>
+  <span class="col numcol">
+    @if (capture.pokemon) {
+      #{{ capture.pokemon.pokedexNumber.toString().padStart(3, '0') }}
+    } @else {
+      #???
+    }
+  </span>
+  <span class="col namecol">
+    @if (capture.pokemon) {
+      <a [routerLink]="['/pokedex', capture.pokemon.id]">
+        {{ capture.pokemon.name }}
+      </a>
+    } @else {
+      <span class="unknown">Pokémon #{{ capture.id }}</span>
+    }
+  </span>
+  @if (showTrainer) {
+    <span class="col trainercol">
+      @if (capture.trainer) {
+        <i class="fa fa-user"></i> {{ capture.trainer.name }}
+      } @else {
+        <i class="fa fa-user"></i> Dresseur inconnu
+      }
+    </span>
+  }
+  <span class="col datecol">
+    <i class="fa fa-calendar"></i> {{ formatDate(capture.captureDate) }}
+  </span>
+  @if (showReleaseButton) {
+    <span class="col actioncol">
+      <button class="release-btn" (click)="onRelease()" title="Relâcher">
+        <i class="fa fa-times"></i>
+      </button>
+    </span>
+  }
+</div>

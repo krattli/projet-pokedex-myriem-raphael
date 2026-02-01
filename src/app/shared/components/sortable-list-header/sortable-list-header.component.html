@@ -1,0 +1,18 @@
+<div class="sort-row">
+  @for (col of columns; track col.key) {
+    <button 
+      class="sortcol" 
+      [class.cur]="currentSort === col.key"
+      [class.sortable]="col.sortable !== false"
+      [style.width]="col.width || 'auto'"
+      [style.flex]="col.width ? 'none' : '1'"
+      (click)="col.sortable !== false && onSort(col.key)"
+      [disabled]="col.sortable === false"
+    >
+      {{ col.label }}
+      @if (currentSort === col.key) {
+        <i class="fa" [class.fa-sort-asc]="!sortDesc" [class.fa-sort-desc]="sortDesc"></i>
+      }
+    </button>
+  }
+</div>

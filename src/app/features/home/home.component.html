@@ -1,0 +1,77 @@
+<div class="page-container">
+  <div class="page-content">
+    <app-pokedex-tabs activeTab="search" />
+
+    <!-- Barre de recherche -->
+    <div class="search-section">
+      <div class="search-box">
+        <i class="fa fa-search"></i>
+        <input 
+          type="text" 
+          class="search-input" 
+          placeholder="Rechercher un Pokémon par nom ou numéro..."
+          [ngModel]="searchQuery()"
+          (ngModelChange)="onSearch($event)"
+          (focus)="showDropdown = true"
+        >
+        @if (searchQuery()) {
+          <button class="clear-btn" (click)="clearSearch()">
+            <i class="fa fa-times"></i>
+          </button>
+        }
+      </div>
+
+      <!-- Dropdown de résultats -->
+      @if (showDropdown && authService.isLoggedIn() && searchQuery() && filteredPokemons().length > 0) {
+        <div class="search-dropdown">
+          @for (pokemon of filteredPokemons().slice(0, 10); track pokemon.id) {
+            <button class="dropdown-item" (click)="goToPokemon(pokemon)">
+              <img [src]="getSpriteUrl(pokemon.pokedexNumber)" [alt]="pokemon.name">
+              <span class="pokemon-num">#{{ pokemon.pokedexNumber.toString().padStart(3, '0') }}</span>
+              <span class="pokemon-name">{{ pokemon.name }}</span>
+              <span class="pokemon-types">
+                @for (type of pokemon.types; track type.id) {
+                  <img [src]="getTypeImgUrl(type.name)" [alt]="type.name" class="type-img">
+                }
+              </span>
+            </button>
+          }
+          @if (filteredPokemons().length > 10) {
+            <div class="dropdown-more">
+              + {{ filteredPokemons().length - 10 }} autres résultats
+            </div>
+          }
+        </div>
+      }
+
+      @if (showDropdown && authService.isLoggedIn() && searchQuery() && filteredPokemons().length === 0 && pokemons().length > 0) {
+        <div class="search-dropdown">
+          <div class="dropdown-empty">
+            Aucun Pokémon trouvé pour "{{ searchQuery() }}"
+          </div>
+        </div>
+      }
+
+      <p class="buttonbar">
+        <button type="button" class="button primary" (click)="navigateToPokedex()">
+          <i class="fa fa-book"></i> 
+          <strong>Voir le Pokédex</strong>
+        </button>
+        <button type="button" class="button" (click)="feelingLucky()">
+          J'ai de la chance
+        </button>
+      </p>
+    </div>
+
+    @if (!authService.isLoggedIn()) {
+      <div class="login-prompt">
+        <h2>Bienvenue dans le Pokédex !</h2>
+        <p>Connectez-vous pour rechercher et capturer des Pokémon.</p>
+      </div>
+    } @else if (loading()) {
+      <div class="loading">
+        <i class="fa fa-spinner fa-spin"></i> Chargement...
+      </div>
+    }
+  </div>
+</div>

@@ -1,0 +1,95 @@
+.capture-row {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  border-bottom: 1px solid #ddd;
+  transition: background-color 0.1s;
+}
+
+.capture-row:hover {
+  background-color: #f5f5f5;
+}
+
+.col {
+  padding: 2px 8px;
+  font-size: 13px;
+}
+
+.iconcol {
+  width: 50px;
+  text-align: center;
+}
+
+.pokemon-sprite {
+  width: 40px;
+  height: 40px;
+  image-rendering: pixelated;
+  vertical-align: middle;
+}
+
+.placeholder-icon {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #eee;
+  border-radius: 50%;
+  color: #999;
+}
+
+.numcol {
+  width: 50px;
+  color: #888;
+  font-family: monospace;
+}
+
+.namecol {
+  flex: 1;
+  min-width: 120px;
+}
+
+.namecol a {
+  font-weight: bold;
+  color: #333;
+  text-decoration: none;
+}
+
+.namecol a:hover {
+  color: #6688aa;
+}
+
+.namecol .unknown {
+  color: #999;
+  font-style: italic;
+}
+
+.trainercol {
+  width: 150px;
+  color: #666;
+}
+
+.datecol {
+  width: 180px;
+  color: #888;
+  font-size: 12px;
+}
+
+.actioncol {
+  width: 50px;
+  text-align: center;
+}
+
+.release-btn {
+  padding: 4px 8px;
+  background: linear-gradient(to bottom, #c05050, #a04040);
+  border: 1px solid #903030;
+  border-radius: 3px;
+  color: white;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.release-btn:hover {
+  background: linear-gradient(to bottom, #d06060, #b05050);
+}

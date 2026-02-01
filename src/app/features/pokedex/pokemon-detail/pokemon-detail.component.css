@@ -1,0 +1,161 @@
+.pfx-panel {
+  padding: 20px;
+}
+
+.pfx-body {
+  margin: 0 auto;
+  max-width: 600px;
+}
+
+.loading, .not-found {
+  text-align: center;
+  padding: 60px;
+  color: #666;
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #6688aa;
+  text-decoration: none;
+  font-size: 13px;
+  margin-bottom: 20px;
+}
+
+.back-link:hover {
+  text-decoration: underline;
+}
+
+.pokemon-detail {
+  background: linear-gradient(to bottom, #f8f8f8, #e8e8e8);
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 24px;
+}
+
+.pokemon-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 24px;
+}
+
+.pokemon-number {
+  font-size: 14px;
+  color: #888;
+  font-family: monospace;
+}
+
+.pokemon-name {
+  margin: 4px 0 12px;
+  font-size: 32px;
+  color: #333;
+  font-family: Verdana, sans-serif;
+}
+
+.pokemon-types {
+  display: flex;
+  gap: 6px;
+}
+
+.no-type {
+  font-size: 12px;
+  color: #888;
+  font-style: italic;
+}
+
+.pokemon-sprite-container {
+  background: linear-gradient(to bottom, #fff, #eee);
+  border: 1px solid #ddd;
+  border-radius: 50%;
+  padding: 16px;
+}
+
+.pokemon-sprite {
+  width: 150px;
+  height: 150px;
+  image-rendering: pixelated;
+}
+
+.pokemon-stats {
+  margin-bottom: 24px;
+}
+
+.pokemon-stats h2 {
+  font-size: 16px;
+  color: #555;
+  margin: 0 0 16px;
+  font-family: Verdana, sans-serif;
+}
+
+.stats-container {
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 16px;
+}
+
+.total-stats {
+  margin-top: 12px;
+  text-align: right;
+  font-size: 14px;
+  color: #555;
+}
+
+.actions {
+  text-align: center;
+}
+
+.success-message {
+  background: #dfd;
+  border: 1px solid #afa;
+  color: #060;
+  padding: 12px;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+.capture-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 32px;
+  background: linear-gradient(to bottom, #5ca05c, #4a8f4a);
+  border: 1px solid #3a7f3a;
+  border-radius: 5px;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.capture-btn:hover {
+  background: linear-gradient(to bottom, #6cb06c, #5a9f5a);
+  transform: scale(1.02);
+}
+
+.login-prompt {
+  text-align: center;
+  padding: 16px;
+  background: #ffd;
+  border: 1px solid #ee9;
+  border-radius: 5px;
+  font-size: 14px;
+  color: #555;
+}
+
+.login-prompt a {
+  color: #6688aa;
+}
+
+.not-found .button {
+  display: inline-flex;
+  padding: 10px 20px;
+  background: linear-gradient(to bottom, #6688aa, #4c6a8c);
+  border: 1px solid #3a5a7a;
+  border-radius: 5px;
+  color: white;
+  text-decoration: none;
+  margin-top: 16px;
+}

@@ -1,0 +1,81 @@
+<div class="pfx-panel">
+  <div class="pfx-body">
+    <form class="auth-form" (ngSubmit)="onSubmit()">
+      <h1>Inscription</h1>
+      
+      @if (error()) {
+        <div class="error-message">
+          <i class="fa fa-exclamation-circle"></i> {{ error() }}
+        </div>
+      }
+
+      <div class="form-group">
+        <label for="name">Nom de dresseur</label>
+        <input 
+          type="text" 
+          id="name" 
+          name="name"
+          class="textbox"
+          [(ngModel)]="name"
+          placeholder="Ex: Sacha Ketchum"
+          required
+        >
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input 
+          type="email" 
+          id="email" 
+          name="email"
+          class="textbox"
+          [(ngModel)]="email"
+          placeholder="votre@email.com"
+          required
+        >
+      </div>
+
+      <div class="form-group">
+        <label for="password">Mot de passe</label>
+        <input 
+          type="password" 
+          id="password" 
+          name="password"
+          class="textbox"
+          [(ngModel)]="password"
+          placeholder="••••••••"
+          required
+        >
+      </div>
+
+      <div class="form-group">
+        <label for="confirmPassword">Confirmer le mot de passe</label>
+        <input 
+          type="password" 
+          id="confirmPassword" 
+          name="confirmPassword"
+          class="textbox"
+          [(ngModel)]="confirmPassword"
+          placeholder="••••••••"
+          required
+        >
+      </div>
+
+      <p class="buttonbar">
+        <button type="submit" class="button" [disabled]="loading()">
+          @if (loading()) {
+            <i class="fa fa-spinner fa-spin"></i>
+          } @else {
+            <i class="fa fa-user-plus"></i>
+          }
+          <strong>S'inscrire</strong>
+        </button>
+      </p>
+
+      <p class="form-footer">
+        Déjà un compte ? 
+        <a routerLink="/login">Connectez-vous</a>
+      </p>
+    </form>
+  </div>
+</div>

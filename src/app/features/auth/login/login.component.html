@@ -1,0 +1,55 @@
+<div class="pfx-panel">
+  <div class="pfx-body">
+    <form class="auth-form" (ngSubmit)="onSubmit()">
+      <h1>Connexion</h1>
+      
+      @if (error()) {
+        <div class="error-message">
+          <i class="fa fa-exclamation-circle"></i> {{ error() }}
+        </div>
+      }
+
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input 
+          type="email" 
+          id="email" 
+          name="email"
+          class="textbox"
+          [(ngModel)]="email"
+          placeholder="votre@email.com"
+          required
+        >
+      </div>
+
+      <div class="form-group">
+        <label for="password">Mot de passe</label>
+        <input 
+          type="password" 
+          id="password" 
+          name="password"
+          class="textbox"
+          [(ngModel)]="password"
+          placeholder="••••••••"
+          required
+        >
+      </div>
+
+      <p class="buttonbar">
+        <button type="submit" class="button" [disabled]="loading()">
+          @if (loading()) {
+            <i class="fa fa-spinner fa-spin"></i>
+          } @else {
+            <i class="fa fa-sign-in"></i>
+          }
+          <strong>Se connecter</strong>
+        </button>
+      </p>
+
+      <p class="form-footer">
+        Pas encore de compte ? 
+        <a routerLink="/register">Inscrivez-vous</a>
+      </p>
+    </form>
+  </div>
+</div>
