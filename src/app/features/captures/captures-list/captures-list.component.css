@@ -228,3 +228,138 @@
 .col {
   padding: 2px 8px;
 }
+
+.capture-row {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  border-bottom: 1px solid #ddd;
+  background: white;
+}
+
+.capture-row:hover {
+  background: #f5f5f5;
+}
+
+.capture-row a {
+  color: #6688aa;
+  text-decoration: none;
+}
+
+.capture-row a:hover {
+  text-decoration: underline;
+}
+
+.info-message {
+  margin-top: 16px;
+  padding: 12px;
+  background: #e8f4fd;
+  border: 1px solid #b8daef;
+  border-radius: 5px;
+  font-size: 12px;
+  color: #0066aa;
+}
+
+/* Styles pour les colonnes */
+.pokedex-number {
+  color: #888;
+  font-size: 13px;
+}
+
+.pokedex-number .unknown {
+  color: #ccc;
+}
+
+.pokemon-name {
+  font-weight: bold;
+}
+
+.trainer-name {
+  color: #666;
+  font-size: 13px;
+}
+
+.trainer-name i {
+  color: #888;
+  margin-right: 4px;
+}
+
+.capture-date {
+  color: #888;
+  font-size: 12px;
+}
+
+.capture-date i {
+  margin-right: 4px;
+}
+
+/* Bouton de relâchement */
+.release-btn {
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 1px solid #dcc;
+  border-radius: 4px;
+  background: linear-gradient(to bottom, #fff, #fee);
+  color: #c66;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.6;
+  transition: opacity 0.15s, background 0.15s;
+}
+
+.capture-row:hover .release-btn {
+  opacity: 1;
+}
+
+.release-btn:hover {
+  background: linear-gradient(to bottom, #fee, #fdd);
+  border-color: #c99;
+  color: #c00;
+}
+
+/* Style pour les données brutes (sans détails) */
+.capture-row.raw-data {
+  background: #fafafa;
+  opacity: 0.8;
+}
+
+.capture-row .unknown-name {
+  color: #999;
+  font-style: italic;
+}
+
+/* Style pour les tabs désactivés */
+.tab-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Code inline dans les messages */
+.warning-message code {
+  background: #f5f5dc;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-family: monospace;
+  font-size: 12px;
+}
+
+/* Amélioration de l'affichage responsive */
+@media (max-width: 600px) {
+  .list-header,
+  .capture-row {
+    padding: 8px;
+  }
+
+  .trainer-name,
+  .capture-date {
+    display: none;
+  }
+
+  .pokemon-icon {
+    width: 32px;
+    height: 32px;
+  }
+}

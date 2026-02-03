@@ -16,6 +16,7 @@
           class="tab-btn" 
           [class.active]="viewMode() === 'my'"
           (click)="setViewMode('my')"
+          [disabled]="dataMode() === 'raw'"
         >
           <i class="fa fa-user"></i> Mes captures
         </button>
@@ -31,7 +32,7 @@
           [class.active]="viewMode() === 'recent'"
           (click)="setViewMode('recent')"
         >
-          <i class="fa fa-clock-o"></i> Récentes (JMS)
+          <i class="fa fa-clock-o"></i> Récentes
         </button>
       </div>
 
@@ -44,120 +45,127 @@
           <i class="fa fa-exclamation-triangle"></i> {{ error() }}
         </div>
       } @else {
-        @if (viewMode() === 'recent') {
-          <!-- JMS Messages -->
-          @if (jmsCaptures().length === 0) {
-            <div class="empty-state">
-              <div class="empty-icon">📡</div>
-              <h2>Aucun message récent</h2>
-              <p>Le service JMS n'a pas encore enregistré de captures.</p>
-            </div>
-          } @else {
-            <div class="list-container">
-              <div class="search-header">
-                <div class="search-input-wrapper">
-                  <i class="fa fa-search"></i>
-                  <input 
-                    type="search" 
-                    class="search-input" 
-                    placeholder="Rechercher..."
-                    [(ngModel)]="searchQuery"
-                  >
-                </div>
-                <div class="result-count">
-                  {{ filteredJmsCaptures().length }} / {{ jmsCaptures().length }} messages
-                </div>
-              </div>
-              <div class="list-header jms-header">
-                <span class="col" style="width:50px">Icon</span>
-                <span class="col" style="flex:1">Pokémon</span>
-                <span class="col" style="width:150px">Dresseur</span>
-                <span class="col" style="width:180px">Date</span>
-              </div>
-              @for (msg of filteredJmsCaptures(); track msg.captureDate + msg.pokemonId) {
-                <div class="jms-row">
-                  <span class="col" style="width:50px;text-align:center">
-                    <img 
-                      [src]="getPokeApiSprite(msg.pokemonId)" 
-                      [alt]="msg.pokemonName"
-                      class="pokemon-icon"
-                      loading="lazy"
-                      (error)="onIconError($event)"
-                    >
-                  </span>
-                  <span class="col" style="flex:1;font-weight:bold">{{ msg.pokemonName }}</span>
-                  <span class="col" style="width:150px;color:#666">
-                    <i class="fa fa-user"></i> {{ msg.trainerName }}
-                  </span>
-                  <span class="col" style="width:180px;color:#888;font-size:12px">
-                    <i class="fa fa-calendar"></i> {{ formatDate(msg.captureDate) }}
-                  </span>
-                </div>
-              }
-              @if (filteredJmsCaptures().length === 0 && searchQuery) {
-                <div class="no-results">
-                  Aucun résultat pour "{{ searchQuery }}"
-                </div>
-              }
-            </div>
-          }
+        @if (allCaptures().length === 0) {
+          <div class="empty-state">
+            <div class="empty-icon">📦</div>
+            <h2>Aucune capture</h2>
+            <p>Aucun Pokémon n'a encore été capturé.</p>
+            <a routerLink="/pokedex" class="button">
+              <i class="fa fa-book"></i> Explorer le Pokédex
+            </a>
+          </div>
+        } @else if (capturesForCurrentView().length === 0) {
+          <div class="empty-state">
+            <div class="empty-icon">🎯</div>
+            <h2>Aucune capture</h2>
+            <p>{{ viewMode() === 'my' ? 'Vous n\'avez pas encore capturé de Pokémon.' : 'Aucune capture dans cette catégorie.' }}</p>
+            <a routerLink="/pokedex" class="button">
+              <i class="fa fa-book"></i> Explorer le Pokédex
+            </a>
+          </div>
         } @else {
-          <!-- Regular Captures -->
-          @if (captures().length === 0) {
-            <div class="empty-state">
-              <div class="empty-icon">📦</div>
-              <h2>Aucune capture</h2>
-              <p>{{ viewMode() === 'my' ? 'Vous n\'avez pas encore capturé de Pokémon.' : 'Aucune capture enregistrée.' }}</p>
-              <a routerLink="/pokedex" class="button">
-                <i class="fa fa-book"></i> Explorer le Pokédex
-              </a>
-            </div>
-          } @else {
-            <div class="list-container">
-              <div class="search-header">
-                <div class="search-input-wrapper">
-                  <i class="fa fa-search"></i>
-                  <input 
-                    type="search" 
-                    class="search-input" 
-                    placeholder="Rechercher..."
-                    [(ngModel)]="searchQuery"
-                  >
-                </div>
-                <div class="result-count">
-                  {{ filteredCaptures().length }} / {{ captures().length }} captures
-                </div>
+          <div class="list-container">
+            <div class="search-header">
+              <div class="search-input-wrapper">
+                <i class="fa fa-search"></i>
+                <input 
+                  type="search" 
+                  class="search-input" 
+                  placeholder="Rechercher par nom..."
+                  [(ngModel)]="searchQuery"
+                  [disabled]="dataMode() === 'raw'"
+                >
               </div>
-              
-              <app-sortable-list-header
-                [columns]="captureColumns"
-                [currentSort]="sortKey"
-                [sortDesc]="sortDesc"
-                (sortChange)="onSortChange($event)"
-              />
-              
-              @for (capture of sortedCaptures(); track capture.id) {
-                <app-capture-list-item
-                  [capture]="capture"
-                  [showTrainer]="viewMode() === 'all'"
-                  [showReleaseButton]="viewMode() === 'my'"
-                  (release)="releasePokemon($event)"
-                />
-              }
-              @if (sortedCaptures().length === 0 && searchQuery) {
-                <div class="no-results">
-                  Aucune capture ne correspond à "{{ searchQuery }}"
-                </div>
+              <div class="result-count">
+                {{ filteredCaptures().length }} / {{ capturesForCurrentView().length }} captures
+              </div>
+            </div>
+            
+            <div class="list-header">
+              <span class="col" style="width:50px"></span>
+              <span class="col" style="width:60px">#</span>
+              <span class="col" style="flex:1">Pokémon</span>
+              <span class="col" style="width:150px">Dresseur</span>
+              <span class="col" style="width:160px">Date</span>
+              @if (viewMode() === 'my' && dataMode() !== 'raw') {
+                <span class="col" style="width:50px"></span>
               }
             </div>
             
-            @if (backendWarning()) {
-              <div class="warning-message">
-                <i class="fa fa-info-circle"></i>
-                Note: Le backend ne retourne pas les détails des Pokémon. 
-                Seules les dates et IDs sont disponibles.
+            @for (capture of sortedCaptures(); track capture.id || capture.captureDate) {
+              <div class="capture-row" [class.raw-data]="capture.isRawData">
+                <span class="col" style="width:50px;text-align:center">
+                  <img 
+                    [src]="getPokeApiSprite(capture.pokedexNumber)" 
+                    [alt]="capture.pokemonName"
+                    class="pokemon-icon"
+                    loading="lazy"
+                    (error)="onIconError($event)"
+                  >
+                </span>
+                <span class="col pokedex-number" style="width:60px">
+                  @if (capture.pokedexNumber) {
+                    #{{ capture.pokedexNumber.toString().padStart(3, '0') }}
+                  } @else {
+                    <span class="unknown">—</span>
+                  }
+                </span>
+                <span class="col pokemon-name" style="flex:1">
+                  @if (capture.pokemonId && !capture.isRawData) {
+                    <a [routerLink]="['/pokedex', capture.pokemonId]">{{ capture.pokemonName }}</a>
+                  } @else {
+                    <span class="unknown-name">{{ capture.pokemonName }}</span>
+                  }
+                </span>
+                <span class="col trainer-name" style="width:150px">
+                  <i class="fa fa-user"></i> {{ capture.trainerName }}
+                </span>
+                <span class="col capture-date" style="width:160px">
+                  <i class="fa fa-calendar"></i> {{ formatDate(capture.captureDate) }}
+                </span>
+                @if (viewMode() === 'my' && dataMode() !== 'raw') {
+                  <span class="col actions" style="width:50px;text-align:center">
+                    <button 
+                      class="release-btn" 
+                      title="Relâcher ce Pokémon"
+                      (click)="releasePokemon(capture.id)"
+                    >
+                      <i class="fa fa-times"></i>
+                    </button>
+                  </span>
+                }
               </div>
             }
+            
+            @if (filteredCaptures().length === 0 && searchQuery) {
+              <div class="no-results">
+                <i class="fa fa-search"></i>
+                Aucune capture ne correspond à "{{ searchQuery }}"
+              </div>
+            }
+          </div>
+          
+          <!-- Messages d'information selon le mode de données -->
+          @if (dataMode() === 'jms') {
+            <div class="info-message">
+              <i class="fa fa-info-circle"></i>
+              <strong>Mode JMS:</strong> Le backend ne retourne pas les détails des captures.
+              Les données proviennent du service JMS (port 8081) et ne contiennent que les captures 
+              effectuées depuis son dernier démarrage.
+            </div>
+          }
+          
+          @if (dataMode() === 'raw') {
+            <div class="warning-message">
+              <i class="fa fa-exclamation-triangle"></i>
+              <strong>Données limitées:</strong> Le backend ne retourne pas les informations des Pokémon 
+              (pokemonId, trainerId). Seuls l'ID de capture et la date sont disponibles.
+              <br><br>
+              <strong>Solution:</strong> Le backend doit être corrigé pour retourner <code>pokemonId</code> 
+              et <code>trainerId</code> dans les réponses de <code>/api/caught-pokemons</code>.
+              <br>
+              Voir le fichier <code>.settings/PROBLEM.md</code> pour plus de détails.
+            </div>
           }
         }
       }

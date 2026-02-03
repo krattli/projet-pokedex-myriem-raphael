@@ -2,7 +2,7 @@
 
 Application web Angular pour un Pokédex, connectée à une API REST Jakarta EE.
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Prérequis
 - Node.js v18+ (v25 fonctionne avec warnings)
@@ -10,11 +10,16 @@ Application web Angular pour un Pokédex, connectée à une API REST Jakarta EE.
 - (Optionnel) JMS Consumer sur `localhost:8081`
 
 ### Lancer le projet
+
+S'assurer que le backend est déjà lancé sur la machine et fonctionne sur les bons ports
+
+Pour le front angular : 
+
 ```bash
 npm install
 npm start
 ```
-➡️ Ouvre http://localhost:4200
+WebApp disponible sur : http://localhost:4200
 
 ### Identifiants de test
 ```
@@ -25,7 +30,7 @@ Mot de passe: password1
 
 ---
 
-## 📁 Structure du Projet
+## Structure du Projet
 
 ```
 src/
@@ -78,7 +83,7 @@ src/
 │   └── app.ts                          # Composant racine
 │
 ├── assets/
-│   └── config.json                     # ⚙️ URLs API (modifiable sans rebuild)
+│   └── config.json                     # URLs API (modifiable sans rebuild)
 │
 ├── environments/                       # Environnements (legacy, non utilisé)
 └── styles.css                          # Styles globaux Pokemon Showdown
@@ -86,7 +91,7 @@ src/
 
 ---
 
-## ⚙️ Configuration
+## Configuration
 
 ### Fichier `src/assets/config.json`
 ```json
@@ -95,11 +100,11 @@ src/
   "jmsApiUrl": "http://localhost:8081/api"
 }
 ```
-Ce fichier est chargé au démarrage via `ConfigService`. Tu peux le modifier sans recompiler.
+Ce fichier est chargé au démarrage via `ConfigService`. Il peux être modifié sans recompiler.
 
 ---
 
-## 🛣️ Routes
+## Routes
 
 | Route | Composant | Auth requise | Description |
 |-------|-----------|--------------|-------------|
@@ -113,11 +118,11 @@ Ce fichier est chargé au démarrage via `ConfigService`. Tu peux le modifier sa
 | `/compare` | PokemonCompareComponent | Oui | Comparer des Pokémon |
 | `/profile` | TrainerProfileComponent | Oui | Profil du dresseur |
 
-*\* L'API backend requiert l'authentification, donc ces pages affichent un message si non connecté.*
+*\* L'API backend requiert une authentification, donc ces pages affichent un message si non connecté.*
 
 ---
 
-## 🔌 Endpoints API Implémentés
+## Endpoints API Implémentés
 
 ### Backend Principal (port 8080)
 
@@ -183,18 +188,7 @@ Ce fichier est chargé au démarrage via `ConfigService`. Tu peux le modifier sa
 
 ---
 
-## 🎨 Style
-
-Le design est inspiré de **Pokemon Showdown** :
-- Header bleu-gris avec gradient
-- Boutons avec effets de gradient et hover
-- Tabbar avec onglets Search/Pokemon/Types/Captures
-- Sprites Pokémon via PokeAPI : `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{pokedexNumber}.png`
-- Couleurs des types définies dans `src/app/core/models/type.model.ts`
-
----
-
-## 🔐 Authentification
+## Authentification
 
 Le backend utilise des **sessions HTTP** avec cookies JSESSIONID :
 
@@ -209,52 +203,10 @@ Le `AuthService` expose :
 
 ---
 
-## 📝 Notes pour le développement
+## Documentation Backend
 
-### Ajouter une nouvelle page
-1. Créer le composant dans `features/`
-2. Ajouter la route dans `app.routes.ts`
-3. Utiliser `PokedexTabsComponent` si c'est une page du Pokédex
-
-### Ajouter un nouvel endpoint API
-1. Ajouter la méthode dans le service approprié (`core/services/`)
-2. Les services utilisent `ConfigService` pour les URLs
-
-### Modèles TypeScript
-Tous les modèles sont dans `core/models/` et exportés via `index.ts`
-
----
-
-## 🛠️ Commandes
-
-```bash
-# Développement
-npm start                    # Lance le serveur dev sur :4200
-
-# Build
-npm run build                # Build production dans dist/
-
-# Tests
-npm test                     # Tests unitaires avec Vitest
-```
-
----
-
-## 📋 TODO / Améliorations possibles
-
-- [ ] Page admin pour CRUD Pokémon/Types (les endpoints existent déjà)
-- [ ] Afficher les types sur les Pokémon (le backend renvoie `types: []` vide)
-- [ ] Page de détail d'un Type avec les Pokémon associés
-- [ ] Notifications toast au lieu des messages inline
-- [ ] Mode hors-ligne avec cache
-- [ ] Tests unitaires
-- [ ] Responsive mobile amélioré
-
----
-
-## 📚 Documentation Backend
-
-La documentation complète du backend est dans `documentation_back/` :
+La documentation complète du backend a été copiée du repo 
+correspondant et est disponible dans : `documentation_back/` :
 - `01-problematique-et-fonctionnalites.md` - Contexte et features
 - `02-architecture-patterns.md` - Architecture et design patterns
 - `03-scenario-flux.md` - Flux de données complet
