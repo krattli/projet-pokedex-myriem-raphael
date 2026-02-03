@@ -3,6 +3,7 @@
     <i class="fa fa-times"></i>
   </button>
 
+  <!-- Header avec sprite et infos de base -->
   <div class="pokemon-header">
     <div class="pokemon-sprite-container">
       <img 
@@ -15,32 +16,123 @@
     <div class="pokemon-info">
       <span class="pokemon-number">#{{ pokemon.pokedexNumber.toString().padStart(3, '0') }}</span>
       <h2 class="pokemon-name">{{ pokemon.name }}</h2>
-      <div class="pokemon-types">
-        @for (type of pokemon.types; track type.id) {
-          <app-type-badge [typeName]="type.name" />
-        }
-        @if (pokemon.types.length === 0) {
-          <span class="no-type">Type inconnu</span>
+      
+      <!-- Types à gauche, mesures à droite -->
+      <div class="pokemon-meta">
+        <div class="pokemon-types">
+          @for (typeName of displayTypes(); track typeName) {
+            <app-type-badge [typeName]="typeName" />
+          }
+          @if (displayTypes().length === 0 && !loadingExtra()) {
+            <span class="no-type">Type inconnu</span>
+          }
+          @if (loadingExtra()) {
+            <span class="loading-indicator"><i class="fa fa-spinner fa-spin"></i></span>
+          }
+        </div>
+        
+        @if (extraData()) {
+          <div class="pokemon-measures">
+            <span class="measure">{{ extraData()!.height | number:'1.1-1' }} m</span>
+            <span class="separator">·</span>
+            <span class="measure">{{ extraData()!.weight | number:'1.1-1' }} kg</span>
+          </div>
         }
       </div>
     </div>
   </div>
 
-  <div class="pokemon-stats">
-    <h3>Statistiques</h3>
-    <div class="stats-container">
-      <app-stat-bar label="PV" [value]="pokemon.hp" />
-      <app-stat-bar label="Attaque" [value]="pokemon.attack" />
-      <app-stat-bar label="Défense" [value]="pokemon.defense" />
-      <app-stat-bar label="Vitesse" [value]="pokemon.speed" />
+  <hr class="divider">
+
+  <!-- Stats : Base stats à gauche (encadré), Calculateur à droite (sans encadré) -->
+  <div class="stats-row">
+    <!-- Stats de base - avec encadré -->
+    <div class="base-stats-section">
+      <h3>Stats de base</h3>
+      <div class="base-stats-box">
+        <app-stat-bar label="HP" [value]="pokemon.hp" />
+        <app-stat-bar label="Atk" [value]="pokemon.attack" />
+        <app-stat-bar label="Def" [value]="pokemon.defense" />
+        <app-stat-bar label="Spe" [value]="pokemon.speed" />
+        <div class="total-stats">
+          <strong>Total:</strong> {{ getTotalStats() }}
+        </div>
+      </div>
     </div>
-    
-    <div class="total-stats">
-      <strong>Total:</strong> {{ getTotalStats() }}
+
+    <!-- Calculateur - sans encadré -->
+    <div class="calc-section">
+      <div class="calc-header">
+        <h3>Calculateur</h3>
+        <div class="level-controls">
+          <span class="level-label">Niv.</span>
+          <input 
+            type="number" 
+            [value]="level()" 
+            (input)="onLevelChange($event)"
+            min="1" 
+            max="100" 
+            class="level-input"
+          >
+          <div class="level-presets">
+            <button (click)="setLevel(50)" [class.active]="level() === 50">50</button>
+            <button (click)="setLevel(100)" [class.active]="level() === 100">100</button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="calc-table">
+        <div class="calc-row header">
+          <span class="stat-name"></span>
+          <span class="stat-val">Min−</span>
+          <span class="stat-val">Min</span>
+          <span class="stat-val">Max</span>
+          <span class="stat-val">Max+</span>
+        </div>
+        @for (stat of calculatedStats(); track stat.name) {
+          <div class="calc-row" [class.hp-row]="stat.name === 'HP'">
+            <span class="stat-name">{{ stat.name }}</span>
+            <span class="stat-val min-minus">{{ stat.minMinus }}</span>
+            <span class="stat-val min">{{ stat.min }}</span>
+            <span class="stat-val max">{{ stat.max }}</span>
+            <span class="stat-val max-plus">{{ stat.maxPlus }}</span>
+          </div>
+        }
+      </div>
+      
+      <div class="calc-legend">
+        <span><strong>−</strong> 0IV 0EV nature−</span>
+        <span><strong>+</strong> 31IV 252EV nature+</span>
+      </div>
     </div>
   </div>
 
+  <!-- Abilities et infos supplémentaires -->
+  @if (extraData()) {
+    <hr class="divider">
+    <div class="extra-info">
+      <div class="abilities-section">
+        <span class="extra-label">Talents</span>
+        <div class="abilities-list">
+          @for (ability of extraData()!.abilities; track ability.name) {
+            <span class="ability" [class.hidden-ability]="ability.isHidden">
+              {{ ability.name }}
+              @if (ability.isHidden) {
+                <span class="hidden-tag">(caché)</span>
+              }
+            </span>
+          }
+        </div>
+      </div>
+      <div class="exp-section">
+        <span class="extra-label">Exp. de base</span>
+        <span class="exp-value">{{ extraData()!.baseExperience }}</span>
+      </div>
+    </div>
+  }
+
   @if (authService.isLoggedIn()) {
+    <hr class="divider">
     <div class="actions">
       @if (successMessage) {
         <div class="success-message">

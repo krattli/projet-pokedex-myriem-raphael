@@ -2,20 +2,20 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  margin: 4px 0;
+  margin: 5px 0;
 }
 
 .stat-label {
-  width: 60px;
-  font-size: 11px;
+  width: 55px;
+  font-size: 12px;
   font-weight: bold;
   color: #555;
   text-transform: uppercase;
 }
 
 .stat-value {
-  width: 30px;
-  font-size: 12px;
+  width: 32px;
+  font-size: 13px;
   font-weight: bold;
   text-align: right;
   color: #333;
@@ -23,7 +23,7 @@
 
 .stat-bar-container {
   flex: 1;
-  height: 8px;
+  height: 9px;
   background: #ddd;
   border-radius: 4px;
   overflow: hidden;
