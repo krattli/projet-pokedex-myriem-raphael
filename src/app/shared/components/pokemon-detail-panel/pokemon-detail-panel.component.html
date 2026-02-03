@@ -131,7 +131,17 @@
     </div>
   }
 
-  <!-- Cartes TCG -->
+  <!-- 
+    ═══════════════════════════════════════════════════════════════
+    SECTION CARTES TCG - AFFICHAGE PROGRESSIF AMÉLIORÉ
+    ═══════════════════════════════════════════════════════════════
+    
+    CHANGEMENTS MAJEURS :
+    1. Les cartes skeleton s'affichent pendant le chargement
+    2. Les vraies cartes apparaissent progressivement (chaque image charge indépendamment)
+    3. Le message "Aucune carte" ne s'affiche que si le chargement est terminé ET qu'il n'y a rien
+    4. Plus de blocage de toute la section pendant le chargement
+  -->
   <hr class="divider">
   <div class="tcg-section">
     <h3>
@@ -139,23 +149,49 @@
       @if (tcgCards().length > 0) {
         <span class="cards-count">({{ tcgCards().length }})</span>
       }
+      @if (loadingCards()) {
+        <span class="loading-indicator">
+          <i class="fa fa-spinner fa-spin"></i>
+        </span>
+      }
     </h3>
     
-    @if (loadingCards() && tcgCards().length === 0) {
-      <div class="cards-loading">
-        <i class="fa fa-spinner fa-spin"></i> Chargement...
-      </div>
-    } @else if (!loadingCards() && tcgCards().length === 0) {
-      <div class="no-cards">
-        <i class="fa fa-image"></i> Aucune carte trouvée
-      </div>
-    } @else {
-      <div class="cards-scroll">
-        @for (card of tcgCards(); track card.id) {
-          <app-tcg-card [card]="card" />
+    <div class="cards-scroll">
+      <!-- 
+        SKELETON CARDS : Affichées uniquement pendant le premier chargement 
+        (quand on n'a pas encore de cartes)
+      -->
+      @if (loadingCards() && tcgCards().length === 0) {
+        @for (i of [1,2,3,4,5,6,7,8]; track i) {
+          <div class="tcg-card-skeleton">
+            <div class="skeleton-shimmer"></div>
+            <div class="skeleton-content">
+              <div class="skeleton-image"></div>
+            </div>
+          </div>
         }
-      </div>
-    }
+      }
+      
+      <!-- 
+        VRAIES CARTES : Affichées dès qu'elles sont disponibles
+        Chaque carte gère son propre chargement d'image de manière indépendante
+      -->
+      @for (card of tcgCards(); track card.id) {
+        <app-tcg-card [card]="card" />
+      }
+      
+      <!-- 
+        MESSAGE "AUCUNE CARTE" : Affiché uniquement si :
+        - Le chargement est terminé (!loadingCards())
+        - ET il n'y a aucune carte (tcgCards().length === 0)
+      -->
+      @if (!loadingCards() && tcgCards().length === 0) {
+        <div class="no-cards-message">
+          <i class="fa fa-image"></i>
+          <p>Aucune carte trouvée</p>
+        </div>
+      }
+    </div>
   </div>
 
   @if (authService.isLoggedIn()) {
