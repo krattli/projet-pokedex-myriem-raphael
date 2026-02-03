@@ -21,6 +21,7 @@ export class HomeComponent {
   private router = inject(Router);
 
   // IMPORTANT: searchQuery doit être un signal pour que computed se mette à jour
+  // c'est fixé
   searchQuery = signal('');
   pokemons = signal<Pokemon[]>([]);
   loading = signal(false);
@@ -100,6 +101,7 @@ export class HomeComponent {
     this.router.navigate(['/pokedex']);
   }
 
+  // petit easter egg google, renvoie un pojémon aléatoire par ce que c'est drôle
   feelingLucky(): void {
     const all = this.pokemons();
     if (all.length > 0) {

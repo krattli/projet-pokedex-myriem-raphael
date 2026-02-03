@@ -27,7 +27,6 @@ export class PokemonListComponent implements OnInit {
   pokemons = signal<Pokemon[]>([]);
   loading = signal(true);
   error = signal<string | null>(null);
-  // IMPORTANT: Ces variables doivent être des signals pour que computed se mette à jour
   searchQuery = signal('');
   sortKey = signal('pokedexNumber');
   sortDesc = signal(false);

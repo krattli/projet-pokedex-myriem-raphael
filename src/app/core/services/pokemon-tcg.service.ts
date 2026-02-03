@@ -1,6 +1,13 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, map, catchError, of, switchMap } from 'rxjs';
+/**
+ * A surement été le plus compliqué à implémenter
+ * Les api sont très lentes donc on a choisi une bdd en local 
+ * Qu'il faut alimenter via un script nodejs 
+ * mais même ce script est très long et inconsistant
+ * Mais il permet d'avoir des images de cartes tcg très belles pour chaque pokémon
+ */
 
 export interface TcgCard {
   id: string;

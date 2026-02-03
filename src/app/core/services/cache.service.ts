@@ -1,6 +1,12 @@
 import { Injectable, signal } from '@angular/core';
 import { Pokemon, Type, CaughtPokemon } from '../models';
 
+/**
+ * Pour ne pas avoir à faire des appels API à chaque fois,
+ * on cache les données dans un objet cache.
+ * On utilise les signaux pour réactiver les données lorsque nécessaire.
+*/
+
 interface CacheData {
   pokemons: Pokemon[] | null;
   types: Type[] | null;
@@ -19,14 +25,13 @@ export class CacheService {
     lastFetch: new Map()
   };
 
-  // Cache TTL in milliseconds (5 minutes)
+  // Time to live du cache en millisecondes (ici à 5 minutes)
   private readonly CACHE_TTL = 5 * 60 * 1000;
 
   // Signals pour réactivité
   pokemonsCache = signal<Pokemon[] | null>(null);
   typesCache = signal<Type[] | null>(null);
 
-  // Pokémons
   getPokemons(): Pokemon[] | null {
     if (this.isExpired('pokemons')) {
       return null;
@@ -40,7 +45,6 @@ export class CacheService {
     this.pokemonsCache.set(pokemons);
   }
 
-  // Types
   getTypes(): Type[] | null {
     if (this.isExpired('types')) {
       return null;
@@ -54,7 +58,6 @@ export class CacheService {
     this.typesCache.set(types);
   }
 
-  // Captures
   getCaptures(key: string): CaughtPokemon[] | null {
     if (this.isExpired(`captures-${key}`)) {
       return null;
@@ -67,7 +70,6 @@ export class CacheService {
     this.cache.lastFetch.set(`captures-${key}`, Date.now());
   }
 
-  // Invalidation
   invalidateCaptures(): void {
     this.cache.captures.clear();
     // Remove all capture-related entries from lastFetch

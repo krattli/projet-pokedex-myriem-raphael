@@ -14,6 +14,8 @@ import { Trainer, TrainerStats, CaughtPokemon } from '../../../core/models';
 })
 export class TrainerProfileComponent implements OnInit {
   private authService = inject(AuthService);
+  // on a pas utilisé les services car ça utilisait des endpoints de l'api JSM
+  // c'était des calculs complexe sur les équipes des trainers
   private trainerService = inject(TrainerService);
   private captureService = inject(CaptureService);
 

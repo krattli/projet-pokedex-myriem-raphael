@@ -21,9 +21,9 @@ export class ConfigService {
         this.http.get<AppConfig>('/assets/config.json')
       );
     } catch (error) {
-      // Fallback to default values
       this.config = {
         apiUrl: 'http://localhost:8080/api',
+        // utilisée avant mais plus aujourd'hui
         jmsApiUrl: 'http://localhost:8081/api'
       };
       console.warn('Could not load config.json, using defaults', error);
@@ -32,9 +32,5 @@ export class ConfigService {
 
   get apiUrl(): string {
     return this.config?.apiUrl ?? 'http://localhost:8080/api';
-  }
-
-  get jmsApiUrl(): string {
-    return this.config?.jmsApiUrl ?? 'http://localhost:8081/api';
   }
 }

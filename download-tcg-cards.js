@@ -1,26 +1,84 @@
 #!/usr/bin/env node
 
 /**
-	  * Script de téléchargement des cartes Pokémon TCG en local
-	  * 
-	  * Usage:
-	  *   node download-tcg-cards.js --download --range 1-151
-	  *   node download-tcg-cards.js --download --all
-	  *   node download-tcg-cards.js --clean
-	  *   node download-tcg-cards.js --verify
-	  *   node download-tcg-cards.js --stats
-	  * 
-	  * Options:
-	  *   --download         Télécharge les cartes
-	  *   --range N-M        Pokédex #N à #M (ex: 1-151 pour gen 1)
-	  *   --all              Tous les Pokémon (1-1025)
-	  *   --limit N          Nombre max de cartes par Pokémon (défaut: 10)
-	  *   --clean            Supprime toutes les cartes téléchargées
-	  *   --verify           Vérifie l'intégrité des fichiers
-	  *   --stats            Affiche les statistiques
-	  *   --force            Force le re-téléchargement même si déjà présent
-	  *   --delay N          Délai entre requêtes en ms (défaut: 500)
-	  */
+ * Gestionnaire de cache Pokémon TCG
+ *
+ * Script CLI pour télécharger, vérifier et maintenir un cache local
+ * d’images de cartes Pokémon TCG depuis l’API officielle pokemontcg.io.
+ *
+ * Les cartes sont stockées par numéro de Pokédex, avec métadonnées
+ * et mécanisme intelligent de reprise après échec.
+ *
+ * ─────────────────────────────────────────────────────────────
+ * STRUCTURE DU CACHE
+ *
+ * public/tcg-cards/
+ * ├── 0001/
+ * │   ├── 01.png
+ * │   ├── 02.png
+ * │   ├── metadata.json
+ * ├── 0002/
+ * │   ├── .empty        ← échec API ou aucune carte trouvée
+ * ├── metadata.json     ← métadonnées globales
+ *
+ * ─────────────────────────────────────────────────────────────
+ * OPTIONS PRINCIPALES
+ *
+ * --download                 Télécharge les cartes Pokémon (tous ou selon --range / --all)
+ *
+ * --download-missing         Télécharge UNIQUEMENT les Pokémon manquants ou incomplets
+ *                            (ne retélécharge pas ceux déjà complets)
+ *
+ * --analyze                  Analyse le cache existant et affiche : 
+ *                            Pokémon complets - Incomplets - Échecs API (.empty) - Manquants
+ *
+ * --verify                   Vérifie l’intégrité du cache (nombre de cartes par Pokémon)
+ *
+ * --stats                    Affiche les statistiques globales (taille, nombre de cartes)
+ *
+ * --clean                    Supprime TOUT le cache (⚠ irréversible)
+ *
+ * --clean-empty              Supprime uniquement les dossiers vides ou marqués .empty
+ *
+ * --range N-M                Télécharge ou analyse une plage de Pokémon
+ *
+ * --all                      Tous les Pokémon existants (1 → 1025)
+ *
+ * --limit N                  Nombre maximum de cartes par Pokémon (défaut: 10)
+ *
+ * --force                    Force le re-téléchargement même si les cartes existent déjà
+ *
+ * --retry-failed             Ré-essaie les Pokémon précédemment marqués en échec (.empty)
+ *
+ * --delay N                  Délai entre requêtes API en millisecondes (défaut: 500)
+ *
+ * ─────────────────────────────────────────────────────────────
+ * EXEMPLES
+ *
+ * # Analyser l’état du cache (Gen 1)
+ * node download-tcg-cards.js --analyze --range 1-151
+ *
+ * # Télécharger UNIQUEMENT les Pokémon manquants
+ * node download-tcg-cards.js --download-missing --range 1-151
+ *
+ * # Télécharger tous les Pokémon sans retélécharger les existants
+ * node download-tcg-cards.js --download-missing --all
+ *
+ * # Ré-essayer les Pokémon ayant échoué précédemment
+ * node download-tcg-cards.js --download-missing --range 1-151 --retry-failed
+ *
+ * # Forcer un re-téléchargement complet (⚠)
+ * node download-tcg-cards.js --download --range 1-151 --force
+ *
+ * ─────────────────────────────────────────────────────────────
+ * 🧠 COMPORTEMENT INTELLIGENT
+ *
+ * ✔ Télécharge 1 carte par set pour maximiser la diversité
+ * ✔ Ignore automatiquement les Pokémon déjà complets
+ * ✔ Reprend les téléchargements interrompus
+ * ✔ Gère les erreurs API avec retry + backoff exponentiel
+ *
+ */
 
 	  const https = require('https');
 const fs = require('fs').promises;

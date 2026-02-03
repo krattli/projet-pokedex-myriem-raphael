@@ -62,11 +62,11 @@ export class PokeApiService {
   private http = inject(HttpClient);
   private readonly baseUrl = 'https://pokeapi.co/api/v2';
   
-  // Cache pour éviter les appels répétés
+  // On fait appel au cache défini dans le fichier CacheService
   private cache = new Map<number, PokemonExtraData>();
 
   getPokemonData(pokedexNumber: number): Observable<PokemonExtraData | null> {
-    // Vérifier le cache
+    // Vérifier si présence dans le cache
     if (this.cache.has(pokedexNumber)) {
       return of(this.cache.get(pokedexNumber)!);
     }
@@ -74,11 +74,11 @@ export class PokeApiService {
     return this.http.get<PokeApiPokemon>(`${this.baseUrl}/pokemon/${pokedexNumber}`).pipe(
       map(data => {
         const extraData: PokemonExtraData = {
-          height: data.height / 10, // Convertir décimètres en mètres
-          weight: data.weight / 10, // Convertir hectogrammes en kg
+          height: data.height / 10, // On convertis les décimètres en mètres
+          weight: data.weight / 10, // On convertis les  hectogrammes en kg
           types: data.types
             .sort((a, b) => a.slot - b.slot)
-            .map(t => this.capitalizeTypeName(t.type.name)),
+            .map(t => t.type.name),
           baseExperience: data.base_experience,
           abilities: data.abilities
             .sort((a, b) => a.slot - b.slot)
@@ -88,7 +88,7 @@ export class PokeApiService {
             }))
         };
         
-        // Mettre en cache
+        // Et on met en cache pour les futurs rechargements de la page
         this.cache.set(pokedexNumber, extraData);
         
         return extraData;
@@ -100,34 +100,9 @@ export class PokeApiService {
     );
   }
 
-  private capitalizeTypeName(name: string): string {
-    // Mapping des noms anglais vers français pour Pokémon Showdown
-    const typeMap: Record<string, string> = {
-      'normal': 'Normal',
-      'fire': 'Fire',
-      'water': 'Water',
-      'electric': 'Electric',
-      'grass': 'Grass',
-      'ice': 'Ice',
-      'fighting': 'Fighting',
-      'poison': 'Poison',
-      'ground': 'Ground',
-      'flying': 'Flying',
-      'psychic': 'Psychic',
-      'bug': 'Bug',
-      'rock': 'Rock',
-      'ghost': 'Ghost',
-      'dragon': 'Dragon',
-      'dark': 'Dark',
-      'steel': 'Steel',
-      'fairy': 'Fairy'
-    };
-    
-    return typeMap[name.toLowerCase()] || name.charAt(0).toUpperCase() + name.slice(1);
-  }
-
   private formatAbilityName(name: string): string {
     // Convertir "overgrow" en "Overgrow", "solar-power" en "Solar Power"
+    // C'est un peu plus lisible que ce qui nous est donné par l'api
     return name
       .split('-')
       .map(word => word.charAt(0).toUpperCase() + word.slice(1))

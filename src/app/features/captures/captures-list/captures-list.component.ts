@@ -6,7 +6,6 @@ import { catchError, map, switchMap } from 'rxjs/operators';
 import { PokemonService } from '../../../core/services/pokemon.service';
 import { CaptureService } from '../../../core/services/capture.service';
 import { TrainerService } from '../../../core/services/trainer.service';
-import { JmsService, CaptureMessage } from '../../../core/services/jms.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { CacheService } from '../../../core/services/cache.service';
 import { Pokemon, Trainer, CaughtPokemon } from '../../../core/models';
@@ -21,12 +20,9 @@ import { PokedexTabsComponent } from '../../../shared/components/pokedex-tabs/po
  * 3. Pour chaque trainerId unique, on appelle GET /api/trainers/{trainerId} → nom du dresseur
  * 4. On combine les données pour l'affichage
  * 
- * FALLBACK 1 - JMS:
- * Si le backend ne retourne pas pokemonId/trainerId, on utilise l'API JMS (port 8081)
- * qui contient les informations complètes (pokemonId, pokemonName, trainerId, trainerName).
- * 
  * FALLBACK 2 - Données brutes:
- * Si l'API JMS est aussi vide, on affiche les captures brutes (id + date) avec un avertissement.
+ * Si l'API est vide, on affiche les captures brutes (id + date) avec un avertissement.
+ * A été utilisée pour le debug mais n'est plus utilisée aujourd'hui
  */
 export interface EnrichedCapture {
   id: number;
@@ -55,7 +51,6 @@ export class CapturesListComponent implements OnInit {
   private pokemonService = inject(PokemonService);
   private captureService = inject(CaptureService);
   private trainerService = inject(TrainerService);
-  private jmsService = inject(JmsService);
   private cacheService = inject(CacheService);
   authService = inject(AuthService);
 
@@ -73,10 +68,9 @@ export class CapturesListComponent implements OnInit {
   /**
    * Mode de données utilisé.
    * - 'rest': API REST principale (backend corrigé)
-   * - 'jms': Fallback vers API JMS
-   * - 'raw': Données brutes (ni REST ni JMS ne fonctionnent correctement)
+   * - 'raw': Données brutes (si REST ne fonctionne pas correctement)
    */
-  dataMode = signal<'rest' | 'jms' | 'raw'>('rest');
+  dataMode = signal<'rest' | 'raw'>('rest');
 
   /**
    * Filtre les captures selon le mode de vue actuel
@@ -141,8 +135,7 @@ export class CapturesListComponent implements OnInit {
   /**
    * Charge les données en essayant dans l'ordre:
    * 1. API REST principale (si corrigée avec pokemonId/trainerId)
-   * 2. API JMS (fallback)
-   * 3. Données brutes (dernier recours)
+   * 2. Données brutes (dernier recours)
    */
   private loadData(): void {
     this.loading.set(true);
@@ -151,11 +144,9 @@ export class CapturesListComponent implements OnInit {
     // Charger en parallèle: captures REST et captures JMS
     forkJoin({
       restCaptures: this.captureService.getAll().pipe(catchError(() => of([]))),
-      jmsCaptures: this.jmsService.getAllCaptures().pipe(catchError(() => of([])))
     }).pipe(
-      switchMap(({ restCaptures, jmsCaptures }) => {
+      switchMap(({ restCaptures }) => {
         console.log('Captures REST:', restCaptures.length, restCaptures);
-        console.log('Captures JMS:', jmsCaptures.length, jmsCaptures);
 
         // Cas 1: Backend REST corrigé (retourne pokemonId/trainerId)
         const hasRestDetails = restCaptures.some(c => c.pokemonId !== undefined && c.trainerId !== undefined);
@@ -165,14 +156,7 @@ export class CapturesListComponent implements OnInit {
           return this.enrichCapturesFromRestApi(restCaptures);
         }
 
-        // Cas 2: Fallback JMS (a des captures)
-        if (jmsCaptures.length > 0) {
-          console.log('📡 Utilisation de l\'API JMS (fallback)');
-          this.dataMode.set('jms');
-          return this.enrichCapturesFromJms(jmsCaptures);
-        }
-
-        // Cas 3: Données brutes (ni REST ni JMS ne fonctionnent)
+        // Cas 2: Données brutes (si REST ne fonctionne pas correctement)
         if (restCaptures.length > 0) {
           console.log('⚠️ Mode données brutes (aucun détail disponible)');
           this.dataMode.set('raw');
@@ -197,32 +181,6 @@ export class CapturesListComponent implements OnInit {
   }
 
   /**
-   * Convertit les captures REST en EnrichedCapture avec les données JMS.
-   */
-  private enrichCapturesFromJms(jmsCaptures: CaptureMessage[]): Observable<EnrichedCapture[]> {
-    return this.loadAllPokemons().pipe(
-      map(pokemons => {
-        const pokemonMap = new Map<number, Pokemon>();
-        pokemons.forEach(p => pokemonMap.set(p.id, p));
-
-        return jmsCaptures.map((msg: CaptureMessage) => {
-          const pokemon = pokemonMap.get(msg.pokemonId);
-          return {
-            id: 0, // JMS n'a pas d'ID de capture
-            captureDate: msg.captureDate,
-            pokemonId: msg.pokemonId,
-            trainerId: msg.trainerId,
-            pokemon,
-            pokemonName: msg.pokemonName,
-            trainerName: msg.trainerName,
-            pokedexNumber: pokemon?.pokedexNumber
-          } as EnrichedCapture;
-        });
-      })
-    );
-  }
-
-  /**
    * Convertit les captures brutes en EnrichedCapture sans détails.
    */
   private convertToRawCaptures(captures: CaughtPokemon[]): EnrichedCapture[] {
@@ -239,7 +197,7 @@ export class CapturesListComponent implements OnInit {
   }
 
   /**
-   * Enrichit les captures depuis l'API REST (quand le backend est corrigé).
+   * Enrichit les captures depuis l'API REST.
    */
   private enrichCapturesFromRestApi(captures: CaughtPokemon[]): Observable<EnrichedCapture[]> {
     const uniquePokemonIds = [...new Set(captures.map(c => c.pokemonId).filter((id): id is number => id !== undefined))];

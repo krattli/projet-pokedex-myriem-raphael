@@ -4,6 +4,10 @@ import { Observable } from 'rxjs';
 import { ConfigService } from './config.service';
 import { Pokemon, PokemonComparison } from '../models';
 
+// Pour tout ce qui est lié aux pokémons sauvages/ du pokédex
+// On a mis touts les endpoints pour les implémenter mais le crud n'est pas utilisé
+// La bdd étant déjà faite, on utilise que les endponts d'accès/de comparaison
+
 @Injectable({
   providedIn: 'root'
 })

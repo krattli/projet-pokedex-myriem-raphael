@@ -37,11 +37,11 @@ export class TcgCardModalComponent {
     const centerX = rect.width / 2;
     const centerY = rect.height / 2;
     
-    // Rotation max de 15 degrés (moins fort car la carte est grande)
+    // Rotation max de 15 degrés (moins fort que l'autre car la carte est grande)
     this.rotateY = ((x - centerX) / centerX) * 15;
     this.rotateX = ((centerY - y) / centerY) * 15;
     
-    // Position du reflet holographique
+    // Position du reflet holographique (même chose que l'autre)
     this.glareX = (x / rect.width) * 100;
     this.glareY = (y / rect.height) * 100;
   }

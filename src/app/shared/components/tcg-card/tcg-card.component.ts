@@ -57,7 +57,7 @@ export class TcgCardComponent {
   }
 
   onClick(): void {
-    // Utiliser le service global pour ouvrir le modal
+    // Utiliser le service global pour ouvrir la modale en plein milieu de l'écran
     this.tcgService.openCard(this.card);
   }
 
@@ -67,6 +67,6 @@ export class TcgCardComponent {
 
   onImageError(): void {
     this.imageError.set(true);
-    this.imageLoaded.set(true); // Pour cacher le loader
+    this.imageLoaded.set(true); // On cache le loader
   }
 }

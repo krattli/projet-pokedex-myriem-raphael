@@ -1,6 +1,12 @@
 import { Pokemon } from './pokemon.model';
 import { Trainer } from './trainer.model';
-
+/**
+ * Rappel de la table caught_pokemons, 
+ * Elle diffère de l'entité Pokemon par la présence d'un champ captureDate,
+ * les pokémons simples les représentent tels qu'ils sont dans le pokédex.
+ * IL y en a donc un seul par type de pokémon.
+ * Ici, un utilisateur peut capturer plusieurs fois le même pokémon.
+*/
 export interface CaughtPokemon {
   id: number;
   trainer?: Trainer;

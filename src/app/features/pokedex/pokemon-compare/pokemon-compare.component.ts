@@ -21,6 +21,7 @@ export class PokemonCompareComponent {
   pokemons = signal<Pokemon[]>([]);
   selectedPokemonIds = signal<number[]>([]);
   // IMPORTANT: searchQuery doit être un signal pour que computed se mette à jour
+  // c'est fixé
   searchQuery = signal('');
   showDropdown = false;
   loading = signal(true);
@@ -49,7 +50,7 @@ export class PokemonCompareComponent {
   constructor() {
     this.loadPokemons();
     
-    // Fermer dropdown quand on clique ailleurs
+    // Fermer dropdown quand on clique ailleurs ofc
     document.addEventListener('click', (e) => {
       const target = e.target as HTMLElement;
       if (!target.closest('.search-box') && !target.closest('.search-dropdown')) {
