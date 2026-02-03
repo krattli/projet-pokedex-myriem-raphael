@@ -29,6 +29,7 @@ export interface CaptureMessage {
   captureDate: string;
 }
 
+// encore inutilisée
 export interface AggregatedStats {
   trainerId: number;
   trainerName: string;

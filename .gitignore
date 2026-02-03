@@ -45,3 +45,5 @@ Thumbs.db
 
 # Very big files
 /public/tcg-cards
+# nom du repo git utilisé pour télécharger les sprites
+/pokemon-tcg-data

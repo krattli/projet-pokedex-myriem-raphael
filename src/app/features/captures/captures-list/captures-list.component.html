@@ -145,16 +145,6 @@
             }
           </div>
           
-          <!-- Messages d'information selon le mode de données -->
-          @if (dataMode() === 'jms') {
-            <div class="info-message">
-              <i class="fa fa-info-circle"></i>
-              <strong>Mode JMS:</strong> Le backend ne retourne pas les détails des captures.
-              Les données proviennent du service JMS (port 8081) et ne contiennent que les captures 
-              effectuées depuis son dernier démarrage.
-            </div>
-          }
-          
           @if (dataMode() === 'raw') {
             <div class="warning-message">
               <i class="fa fa-exclamation-triangle"></i>
