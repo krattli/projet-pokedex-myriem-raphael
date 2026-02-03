@@ -1,0 +1,47 @@
+<div 
+  class="modal-backdrop" 
+  [class.closing]="isClosing"
+  (click)="onBackdropClick($event)"
+>
+  <div class="modal-content" [class.closing]="isClosing">
+    <button class="close-btn" (click)="close()">
+      <i class="fa fa-times"></i>
+    </button>
+    
+    <div 
+      #cardEl
+      class="large-card" 
+      [class.hovered]="isHovered"
+      [style.--rotateX]="rotateX + 'deg'"
+      [style.--rotateY]="rotateY + 'deg'"
+      [style.--glareX]="glareX + '%'"
+      [style.--glareY]="glareY + '%'"
+      (mousemove)="onMouseMove($event, cardEl)"
+      (mouseenter)="onMouseEnter()"
+      (mouseleave)="onMouseLeave()"
+    >
+      <div class="card-inner">
+        <img [src]="card.images.large" [alt]="card.name" class="card-image">
+        <div class="card-glare"></div>
+        <div class="card-holographic"></div>
+        <div class="card-sparkles"></div>
+      </div>
+    </div>
+    
+    <div class="card-info">
+      <h3>{{ card.name }}</h3>
+      <div class="card-details">
+        <span class="set-name">{{ card.set.name }}</span>
+        <span class="separator">·</span>
+        <span class="card-number">#{{ card.number }}</span>
+        @if (card.rarity) {
+          <span class="separator">·</span>
+          <span class="rarity">{{ card.rarity }}</span>
+        }
+      </div>
+      @if (card.artist) {
+        <div class="artist">Illustré par {{ card.artist }}</div>
+      }
+    </div>
+  </div>
+</div>

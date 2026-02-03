@@ -1,0 +1,44 @@
+<div 
+  #cardEl
+  class="tcg-card" 
+  [class.hovered]="isHovered"
+  [class.loaded]="imageLoaded()"
+  [style.--rotateX]="rotateX + 'deg'"
+  [style.--rotateY]="rotateY + 'deg'"
+  [style.--glareX]="glareX + '%'"
+  [style.--glareY]="glareY + '%'"
+  (mousemove)="onMouseMove($event)"
+  (mouseenter)="onMouseEnter()"
+  (mouseleave)="onMouseLeave()"
+  (click)="onClick()"
+>
+  <div class="card-inner">
+    <!-- Loader pendant le chargement de l'image -->
+    @if (!imageLoaded()) {
+      <div class="card-loader">
+        <div class="loader-spinner"></div>
+      </div>
+    }
+    
+    <!-- Image de la carte -->
+    <img 
+      [src]="card.images.small" 
+      [alt]="card.name" 
+      class="card-image" 
+      [class.hidden]="!imageLoaded() || imageError()"
+      (load)="onImageLoad()"
+      (error)="onImageError()"
+      loading="lazy"
+    >
+    
+    <!-- Placeholder en cas d'erreur -->
+    @if (imageError()) {
+      <div class="card-error">
+        <i class="fa fa-image"></i>
+      </div>
+    }
+    
+    <div class="card-glare"></div>
+    <div class="card-holographic"></div>
+  </div>
+</div>

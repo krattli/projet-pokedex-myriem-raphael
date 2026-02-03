@@ -1,0 +1,194 @@
+/* Container de la carte avec perspective 3D */
+.tcg-card {
+  --rotateX: 0deg;
+  --rotateY: 0deg;
+  --glareX: 50%;
+  --glareY: 50%;
+  
+  width: 120px;
+  aspect-ratio: 63 / 88;
+  perspective: 1000px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+  transform-style: preserve-3d;
+  transform: rotateX(var(--rotateX)) rotateY(var(--rotateY));
+  transition: transform 0.1s ease-out, box-shadow 0.3s ease;
+  box-shadow: 
+    0 4px 8px rgba(0, 0, 0, 0.2),
+    0 2px 4px rgba(0, 0, 0, 0.1);
+  background: linear-gradient(135deg, #1a1a2e, #16213e);
+  overflow: hidden;
+}
+
+.tcg-card.hovered .card-inner {
+  box-shadow: 
+    0 20px 40px rgba(0, 0, 0, 0.3),
+    0 10px 20px rgba(0, 0, 0, 0.2),
+    0 0 30px rgba(255, 255, 255, 0.1);
+}
+
+/* Loader pendant le chargement de l'image */
+.card-loader {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #1a1a2e, #16213e);
+  border-radius: 8px;
+}
+
+.loader-spinner {
+  width: 24px;
+  height: 24px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-top-color: rgba(255, 255, 255, 0.8);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Placeholder en cas d'erreur */
+.card-error {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #2a2a3e, #1a1a2e);
+  color: rgba(255, 255, 255, 0.3);
+  font-size: 24px;
+  border-radius: 8px;
+}
+
+.card-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 8px;
+  display: block;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+.card-image.hidden {
+  opacity: 0;
+  position: absolute;
+}
+
+/* Effet de brillance qui suit le curseur */
+.card-glare {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  background: radial-gradient(
+    circle at var(--glareX) var(--glareY),
+    rgba(255, 255, 255, 0.8) 0%,
+    rgba(255, 255, 255, 0.4) 20%,
+    transparent 60%
+  );
+}
+
+.tcg-card.hovered.loaded .card-glare {
+  opacity: 0.6;
+}
+
+/* Effet holographique arc-en-ciel */
+.card-holographic {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+  pointer-events: none;
+  opacity: 0;
+  mix-blend-mode: color-dodge;
+  transition: opacity 0.3s ease;
+  background: linear-gradient(
+    125deg,
+    rgba(255, 0, 0, 0.3) 0%,
+    rgba(255, 154, 0, 0.3) 10%,
+    rgba(208, 222, 33, 0.3) 20%,
+    rgba(79, 220, 74, 0.3) 30%,
+    rgba(63, 218, 216, 0.3) 40%,
+    rgba(47, 201, 226, 0.3) 50%,
+    rgba(28, 127, 238, 0.3) 60%,
+    rgba(95, 21, 242, 0.3) 70%,
+    rgba(186, 12, 248, 0.3) 80%,
+    rgba(251, 7, 217, 0.3) 90%,
+    rgba(255, 0, 0, 0.3) 100%
+  );
+  background-size: 200% 200%;
+  animation: holographic-shift 3s ease infinite;
+  filter: blur(2px);
+}
+
+.tcg-card.hovered.loaded .card-holographic {
+  opacity: 0.5;
+}
+
+@keyframes holographic-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Animation au hover global */
+.tcg-card:hover {
+  z-index: 10;
+}
+
+/* Effet de bordure lumineuse */
+.card-inner::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  border-radius: 10px;
+  background: linear-gradient(
+    45deg,
+    transparent,
+    rgba(255, 255, 255, 0.1),
+    transparent
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: -1;
+}
+
+.tcg-card.hovered .card-inner::before {
+  opacity: 1;
+}
