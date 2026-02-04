@@ -9,7 +9,7 @@
       (error)="onIconError($event)"
     >
   </span>
-  <span class="col pokemonnamecol">{{ pokemon.name }}</span>
+  <span class="col pokemonnamecol" [innerHTML]="getHighlightedHtml(pokemon.name, searchQuery)"></span>
   <span class="col typecol">
     @for (type of pokemon.types; track type.id) {
       <img 

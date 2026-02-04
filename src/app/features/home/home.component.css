@@ -107,6 +107,12 @@
   font-weight: bold;
 }
 
+.dropdown-item .pokemon-name .highlight {
+  color: #0066cc;
+  font-weight: bold;
+  text-decoration: underline;
+}
+
 .dropdown-item .pokemon-types {
   display: flex;
   gap: 4px;
@@ -173,6 +179,17 @@
 }
 
 .login-prompt p {
-  margin: 0;
+  margin: 0 0 24px;
   color: #666;
+}
+
+.login-actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.login-actions .button {
+  text-decoration: none;
 }

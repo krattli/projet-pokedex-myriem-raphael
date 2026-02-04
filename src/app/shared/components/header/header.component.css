@@ -27,6 +27,7 @@
 .header-nav {
   display: flex;
   gap: 4px;
+  /* Navigation principale déplacée vers les tabs sur la page home */
 }
 
 .header-right {

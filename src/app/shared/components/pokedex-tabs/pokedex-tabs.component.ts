@@ -11,12 +11,12 @@ import { AuthService } from '../../../core/services/auth.service';
   styleUrls: ['./pokedex-tabs.component.css']
 })
 export class PokedexTabsComponent {
-  @Input() activeTab: 'search' | 'pokemon' | 'types' | 'captures' = 'search';
+  @Input() activeTab: 'search' | 'pokemon' | 'types' | 'captures' | 'compare' = 'search';
 
   authService = inject(AuthService);
   private router = inject(Router);
 
-  navigate(tab: 'search' | 'pokemon' | 'types' | 'captures'): void {
+  navigate(tab: 'search' | 'pokemon' | 'types' | 'captures' | 'compare'): void {
     switch (tab) {
       case 'search':
         this.router.navigate(['/']);
@@ -29,6 +29,9 @@ export class PokedexTabsComponent {
         break;
       case 'captures':
         this.router.navigate(['/captures']);
+        break;
+      case 'compare':
+        this.router.navigate(['/compare']);
         break;
     }
   }

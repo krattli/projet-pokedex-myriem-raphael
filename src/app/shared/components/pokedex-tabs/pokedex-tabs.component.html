@@ -35,13 +35,27 @@
     <li>
       <button 
         type="button" 
-        class="button nav-last" 
+        class="button" 
+        [class.nav-last]="!authService.isLoggedIn()"
         [class.cur]="activeTab === 'captures'"
         (click)="navigate('captures')"
+        [disabled]="!authService.isLoggedIn()"
       >
         <i class="fa fa-trophy"></i> <span>Captures</span>
       </button>
     </li>
+    @if (authService.isLoggedIn()) {
+      <li>
+        <button 
+          type="button" 
+          class="button nav-last" 
+          [class.cur]="activeTab === 'compare'"
+          (click)="navigate('compare')"
+        >
+          <i class="fa fa-balance-scale"></i> <span>Comparer</span>
+        </button>
+      </li>
+    }
   </ul>
 
   @if (!authService.isLoggedIn()) {

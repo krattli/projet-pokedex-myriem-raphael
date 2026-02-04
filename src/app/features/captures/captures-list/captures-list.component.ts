@@ -62,7 +62,7 @@ export class CapturesListComponent implements OnInit {
   allCaptures = signal<EnrichedCapture[]>([]);
   loading = signal(true);
   error = signal<string | null>(null);
-  searchQuery = '';
+  searchQuery = signal('');
   sortDesc = true;
 
   /**
@@ -94,7 +94,7 @@ export class CapturesListComponent implements OnInit {
    * Applique le filtre de recherche
    */
   filteredCaptures = computed((): EnrichedCapture[] => {
-    const query = this.searchQuery.toLowerCase().trim();
+    const query = this.searchQuery().toLowerCase().trim();
     const captures = this.capturesForCurrentView();
     
     if (!query) return captures;
@@ -129,7 +129,7 @@ export class CapturesListComponent implements OnInit {
 
   setViewMode(mode: 'my' | 'all' | 'recent'): void {
     this.viewMode.set(mode);
-    this.searchQuery = '';
+    this.searchQuery.set('');
   }
 
   /**

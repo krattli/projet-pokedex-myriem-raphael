@@ -6,20 +6,7 @@
   </div>
   
   <nav class="header-nav">
-    <a routerLink="/" class="nav-button">
-      <i class="fa fa-home"></i> Accueil
-    </a>
-    <a routerLink="/pokedex" class="nav-button">
-      <i class="fa fa-book"></i> Pokédex
-    </a>
-    @if (authService.isLoggedIn()) {
-      <a routerLink="/compare" class="nav-button">
-        <i class="fa fa-balance-scale"></i> Comparer
-      </a>
-      <a routerLink="/captures" class="nav-button">
-        <i class="fa fa-trophy"></i> Captures
-      </a>
-    }
+    <!-- Navigation principale déplacée vers les tabs sur la page home -->
   </nav>
 
   <div class="header-right">

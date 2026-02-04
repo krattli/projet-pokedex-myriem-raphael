@@ -6,9 +6,9 @@
       </div>
     } @else if (pokemon()) {
       <div class="pokemon-detail">
-        <a routerLink="/pokedex" class="back-link">
-          <i class="fa fa-arrow-left"></i> Retour au Pokédex
-        </a>
+        <button type="button" class="back-link" (click)="goBack()">
+          <i class="fa fa-arrow-left"></i> Retour
+        </button>
 
         <div class="pokemon-header">
           <div class="pokemon-info">
@@ -69,7 +69,7 @@
       <div class="not-found">
         <h2>Pokémon non trouvé</h2>
         <p>Ce Pokémon n'existe pas dans notre base de données.</p>
-        <a routerLink="/pokedex" class="button">Retour au Pokédex</a>
+        <button type="button" class="button" (click)="goBack()">Retour</button>
       </div>
     }
   </div>

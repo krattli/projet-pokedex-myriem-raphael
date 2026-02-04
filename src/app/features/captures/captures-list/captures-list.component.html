@@ -72,7 +72,8 @@
                   type="search" 
                   class="search-input" 
                   placeholder="Rechercher par nom..."
-                  [(ngModel)]="searchQuery"
+                  [ngModel]="searchQuery()"
+                  (ngModelChange)="searchQuery.set($event)"
                   [disabled]="dataMode() === 'raw'"
                 >
               </div>
@@ -137,10 +138,10 @@
               </div>
             }
             
-            @if (filteredCaptures().length === 0 && searchQuery) {
+            @if (filteredCaptures().length === 0 && searchQuery()) {
               <div class="no-results">
                 <i class="fa fa-search"></i>
-                Aucune capture ne correspond à "{{ searchQuery }}"
+                Aucune capture ne correspond à "{{ searchQuery() }}"
               </div>
             }
           </div>

@@ -48,6 +48,7 @@
                 [pokemon]="pokemon"
                 [showCaptureButton]="!selectedPokemon()"
                 [isSelected]="selectedPokemon()?.id === pokemon.id"
+                [searchQuery]="searchQuery()"
                 (select)="selectPokemon($event)"
                 (capture)="capturePokemon($event)"
               />

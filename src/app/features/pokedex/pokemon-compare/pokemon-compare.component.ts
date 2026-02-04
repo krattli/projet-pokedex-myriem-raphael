@@ -1,15 +1,16 @@
 import { Component, inject, signal, computed } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { DecimalPipe } from '@angular/common';
 import { PokemonService } from '../../../core/services/pokemon.service';
 import { CacheService } from '../../../core/services/cache.service';
 import { Pokemon, PokemonComparison } from '../../../core/models';
+import { PokedexTabsComponent } from '../../../shared/components/pokedex-tabs/pokedex-tabs.component';
 
 @Component({
   selector: 'app-pokemon-compare',
   standalone: true,
-  imports: [FormsModule, DecimalPipe, RouterLink],
+  imports: [FormsModule, DecimalPipe, PokedexTabsComponent],
   templateUrl: './pokemon-compare.component.html',
   styleUrls: ['./pokemon-compare.component.css']
 })

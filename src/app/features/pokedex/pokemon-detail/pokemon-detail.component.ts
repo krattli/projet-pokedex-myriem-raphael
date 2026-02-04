@@ -1,5 +1,6 @@
 import { Component, inject, signal, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { Location } from '@angular/common';
 import { PokemonService } from '../../../core/services/pokemon.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { CaptureService } from '../../../core/services/capture.service';
@@ -17,6 +18,7 @@ import { StatBarComponent } from '../../../shared/components/stat-bar/stat-bar.c
 export class PokemonDetailComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
+  private location = inject(Location);
   private pokemonService = inject(PokemonService);
   private captureService = inject(CaptureService);
   authService = inject(AuthService);
@@ -71,5 +73,15 @@ export class PokemonDetailComponent implements OnInit {
         console.error('Erreur lors de la capture:', err);
       }
     });
+  }
+
+  goBack(): void {
+    // Vérifier si on peut revenir en arrière
+    if (window.history.length > 1) {
+      this.location.back();
+    } else {
+      // Fallback : rediriger vers la page d'accueil
+      this.router.navigate(['/']);
+    }
   }
 }

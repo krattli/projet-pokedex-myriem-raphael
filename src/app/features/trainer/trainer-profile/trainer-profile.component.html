@@ -5,8 +5,50 @@
         <i class="fa fa-user-circle"></i>
       </div>
       <div class="trainer-info">
-        <h1>{{ trainer()?.name || 'Dresseur' }}</h1>
+        @if (editingName()) {
+          <div class="name-edit-form">
+            <input 
+              type="text" 
+              class="name-input" 
+              [ngModel]="newName()"
+              (ngModelChange)="newName.set($event)"
+              [disabled]="updatingName()"
+              placeholder="Nouveau pseudo"
+            >
+            <div class="name-edit-actions">
+              <button 
+                class="btn-save" 
+                (click)="saveName()" 
+                [disabled]="updatingName() || !newName().trim() || newName().trim() === trainer()?.name"
+              >
+                @if (updatingName()) {
+                  <i class="fa fa-spinner fa-spin"></i>
+                } @else {
+                  <i class="fa fa-check"></i>
+                }
+                Enregistrer
+              </button>
+              <button 
+                class="btn-cancel" 
+                (click)="cancelEditingName()"
+                [disabled]="updatingName()"
+              >
+                <i class="fa fa-times"></i> Annuler
+              </button>
+            </div>
+          </div>
+        } @else {
+          <div class="name-display">
+            <h1>{{ trainer()?.name || 'Dresseur' }}</h1>
+            <button class="btn-edit-name" (click)="startEditingName()" title="Modifier le pseudo">
+              <i class="fa fa-pencil"></i>
+            </button>
+          </div>
+        }
         <p class="email">{{ trainer()?.email }}</p>
+        @if (firstCaptureDate()) {
+          <p class="member-since">Dresseur depuis le {{ firstCaptureDate() }}</p>
+        }
       </div>
     </div>
 
@@ -15,45 +57,86 @@
         <i class="fa fa-spinner fa-spin"></i> Chargement des statistiques...
       </div>
     } @else {
-      <div class="stats-grid">
-        <div class="stat-card">
-          <div class="stat-icon"><i class="fa fa-trophy"></i></div>
-          <div class="stat-value">{{ captures().length }}</div>
-          <div class="stat-label">Pokémon capturés</div>
+      <div class="stats-list">
+        <div class="stat-row">
+          <div class="stat-left">
+            <i class="fa fa-trophy"></i>
+            <span class="stat-label">Pokémon capturés</span>
+          </div>
+          <div class="stat-value">
+            @if (trainerStats()) {
+              {{ captures().length }}/{{ trainerStats()!.totalPokemonsInPokedex }}
+            } @else {
+              {{ captures().length }}
+            }
+          </div>
         </div>
 
-        <div class="stat-card">
-          <div class="stat-icon"><i class="fa fa-star"></i></div>
-          <div class="stat-value">{{ uniquePokemons() }}</div>
-          <div class="stat-label">Pokémon uniques</div>
+        <div class="stat-row">
+          <div class="stat-left">
+            <i class="fa fa-star"></i>
+            <span class="stat-label">Pokémon uniques</span>
+          </div>
+          <div class="stat-value">
+            @if (trainerStats()) {
+              {{ uniquePokemons() }}/{{ trainerStats()!.totalPokemonsInPokedex }}
+            } @else {
+              {{ uniquePokemons() }}
+            }
+          </div>
         </div>
 
-        <div class="stat-card">
-          <div class="stat-icon"><i class="fa fa-tags"></i></div>
+        <div class="stat-row">
+          <div class="stat-left">
+            <i class="fa fa-tags"></i>
+            <span class="stat-label">Types différents</span>
+          </div>
           <div class="stat-value">{{ uniqueTypes() }}</div>
-          <div class="stat-label">Types différents</div>
         </div>
+
+        @if (trainerStats()) {
+          <div class="stat-row">
+            <div class="stat-left">
+              <i class="fa fa-percent"></i>
+              <span class="stat-label">Pokédex complété</span>
+            </div>
+            <div class="stat-value">{{ pokedexCompletion().toFixed(1) }}%</div>
+          </div>
+
+          @if (mostCapturedType()) {
+            <div class="stat-row">
+              <div class="stat-left">
+                <i class="fa fa-fire"></i>
+                <span class="stat-label">Type favori</span>
+              </div>
+              <div class="stat-value">{{ mostCapturedType() }}</div>
+            </div>
+          }
+        }
       </div>
 
       @if (captures().length > 0) {
         <div class="recent-captures">
-          <h2>Dernières captures</h2>
-          <div class="captures-preview">
+          <div class="captures-header">
+            <h2>Dernières captures</h2>
+            <a routerLink="/captures" class="view-all-link">
+              Voir toutes <i class="fa fa-arrow-right"></i>
+            </a>
+          </div>
+          <div class="captures-list">
             @for (capture of recentCaptures(); track capture.id) {
               @if (capture.pokemon) {
-                <a [routerLink]="['/pokedex', capture.pokemon.id]" class="capture-item">
+                <a [routerLink]="['/pokedex', capture.pokemon.id]" class="capture-link">
                   <img 
                     [src]="getSpriteUrl(capture.pokemon.pokedexNumber)" 
                     [alt]="capture.pokemon.name"
+                    class="capture-sprite"
                   >
                   <span>{{ capture.pokemon.name }}</span>
                 </a>
               }
             }
           </div>
-          <a routerLink="/captures" class="view-all">
-            Voir toutes mes captures <i class="fa fa-arrow-right"></i>
-          </a>
         </div>
       } @else {
         <div class="no-captures">
@@ -64,17 +147,49 @@
         </div>
       }
 
-      <div class="actions">
-        <a routerLink="/pokedex" class="button">
-          <i class="fa fa-book"></i> Pokédex
-        </a>
-        <a routerLink="/compare" class="button">
-          <i class="fa fa-balance-scale"></i> Comparer
-        </a>
-        <a routerLink="/captures" class="button">
-          <i class="fa fa-trophy"></i> Mes Captures
-        </a>
+      <div class="account-actions">
+        <button 
+          class="button-danger" 
+          (click)="showDeleteModal = true"
+          [disabled]="deletingAccount()"
+        >
+          @if (deletingAccount()) {
+            <i class="fa fa-spinner fa-spin"></i> Suppression...
+          } @else {
+            <i class="fa fa-trash"></i> Supprimer mon compte
+          }
+        </button>
       </div>
+
+      <!-- Modale de confirmation -->
+      @if (showDeleteModal) {
+        <div class="modal-overlay" (click)="showDeleteModal = false">
+          <div class="modal-content" (click)="$event.stopPropagation()">
+            <h3>Confirmer la suppression</h3>
+            <p>Êtes-vous sûr de vouloir supprimer votre compte <strong>{{ trainer()?.name }}</strong> ?</p>
+            <p class="modal-warning">
+              <i class="fa fa-exclamation-triangle"></i>
+              Cette action est définitive et irréversible. Toutes vos données (captures, statistiques, etc.) seront supprimées.
+            </p>
+            <div class="modal-actions">
+              <button class="btn-cancel-modal" (click)="showDeleteModal = false">
+                Annuler
+              </button>
+              <button 
+                class="btn-confirm-delete" 
+                (click)="confirmDeleteAccount()"
+                [disabled]="deletingAccount()"
+              >
+                @if (deletingAccount()) {
+                  <i class="fa fa-spinner fa-spin"></i> Suppression...
+                } @else {
+                  <i class="fa fa-trash"></i> Supprimer définitivement
+                }
+              </button>
+            </div>
+          </div>
+        </div>
+      }
     }
   </div>
 </div>

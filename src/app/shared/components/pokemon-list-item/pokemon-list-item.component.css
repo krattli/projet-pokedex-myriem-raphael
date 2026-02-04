@@ -49,6 +49,12 @@
   min-width: 120px;
 }
 
+.pokemonnamecol .highlight {
+  color: #0066cc;
+  font-weight: bold;
+  text-decoration: underline;
+}
+
 .typecol {
   width: 80px;
   display: flex;
