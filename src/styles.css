@@ -1,4 +1,24 @@
-/* Pokemon Showdown inspired global styles */
+/* Palette pastel globale */
+:root {
+  --color-bg: #f5f5fb;
+  --color-surface: #ffffff;
+  --color-surface-soft: #f1f3ff;
+  --color-primary: #4c6fff;
+  --color-primary-soft: #dfe5ff;
+  --color-primary-softest: #eef1ff;
+  --color-accent: #ff9aa2;
+  --color-accent-soft: #ffe3e6;
+  --color-success: #6cc8a1;
+  --color-success-soft: #e0f7ed;
+  --color-danger: #ff6b81;
+  --color-danger-soft: #ffe1e6;
+  --color-border-subtle: #d6d8e5;
+  --color-border-strong: #b4b7d0;
+  --color-text-main: #1f2430;
+  --color-text-muted: #6b6f80;
+}
+
+/* Pokemon Showdown inspired global styles (adapté) */
 
 * {
   box-sizing: border-box;
@@ -14,8 +34,8 @@ body {
   font-family: Verdana, Geneva, sans-serif;
   font-size: 13px;
   line-height: 1.4;
-  color: #333;
-  background: #e8e8e8;
+  color: var(--color-text-main);
+  background: radial-gradient(circle at top left, #faf5ff 0, #f5f5fb 40%, #eef7ff 100%);
 }
 
 /* Font Awesome CDN - add to index.html */
@@ -23,7 +43,7 @@ body {
 
 /* Links */
 a {
-  color: #6688aa;
+  color: var(--color-primary);
   text-decoration: none;
 }
 
@@ -37,11 +57,11 @@ a:hover {
   align-items: center;
   justify-content: center;
   gap: 6px;
-  padding: 8px 16px;
-  background: linear-gradient(to bottom, #f8f8f8, #e0e0e0);
-  border: 1px solid #aaa;
-  border-radius: 5px;
-  color: #555;
+  padding: 8px 18px;
+  background: linear-gradient(to bottom, var(--color-surface), #f2f3ff);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 999px;
+  color: var(--color-text-main);
   font-size: 13px;
   font-family: Verdana, sans-serif;
   cursor: pointer;
@@ -50,18 +70,18 @@ a:hover {
 }
 
 .button:hover {
-  background: linear-gradient(to bottom, #fff, #e8e8e8);
-  border-color: #888;
+  background: linear-gradient(to bottom, #ffffff, #e8ebff);
+  border-color: var(--color-border-strong);
   text-decoration: none;
 }
 
 .button:active {
-  background: linear-gradient(to bottom, #e0e0e0, #d0d0d0);
+  background: linear-gradient(to bottom, #e3e5ff, #d4d8ff);
 }
 
 .button.primary {
-  background: linear-gradient(to bottom, #6688aa, #4c6a8c);
-  border-color: #3a5a7a;
+  background: linear-gradient(to bottom, var(--color-primary), #3d56d4);
+  border-color: #3244a8;
   color: white;
 }
 
@@ -70,8 +90,8 @@ a:hover {
 }
 
 .button.success {
-  background: linear-gradient(to bottom, #5ca05c, #4a8f4a);
-  border-color: #3a7f3a;
+  background: linear-gradient(to bottom, var(--color-success), #45a87e);
+  border-color: #348866;
   color: white;
 }
 
@@ -80,8 +100,8 @@ a:hover {
 }
 
 .button.danger {
-  background: linear-gradient(to bottom, #c05050, #a04040);
-  border-color: #903030;
+  background: linear-gradient(to bottom, var(--color-danger), #e05064);
+  border-color: #b83b4c;
   color: white;
 }
 
@@ -106,8 +126,8 @@ a:hover {
 
 .textbox:focus {
   outline: none;
-  border-color: #6688aa;
-  box-shadow: 0 0 4px rgba(102, 136, 170, 0.4);
+  border-color: var(--color-primary);
+  box-shadow: 0 0 4px rgba(76, 111, 255, 0.35);
 }
 
 .textbox::placeholder {
@@ -155,8 +175,8 @@ a:hover {
 
 /* Panels - Pokemon Showdown style */
 .panel {
-  background: linear-gradient(to bottom, #f8f8f8, #e8e8e8);
-  border: 1px solid #ccc;
+  background: linear-gradient(to bottom, var(--color-surface), var(--color-surface-soft));
+  border: 1px solid var(--color-border-subtle);
   border-radius: 8px;
   padding: 16px;
 }
@@ -192,41 +212,10 @@ a:hover {
   padding: 16px;
 }
 
-/* Tabbar - Pokemon Showdown style */
-.tabbar {
-  display: flex;
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.tabbar.centered {
-  justify-content: center;
-}
-
-.tabbar li {
-  margin: 0;
-}
-
-.tabbar .button {
-  border-radius: 0;
-  margin: 0;
-}
-
-.tabbar li:first-child .button {
-  border-radius: 5px 0 0 5px;
-}
-
-.tabbar li:last-child .button {
-  border-radius: 0 5px 5px 0;
-}
-
-.tabbar .button:not(:first-child) {
-  border-left: none;
-}
-
-.tabbar .button.cur {
-  background: linear-gradient(to bottom, #6688aa, #4c6a8c);
-  color: white;
-  border-color: #3a5a7a;
+/* Titres de page */
+.page-title {
+  margin: 0 0 16px;
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--color-text-main);
 }

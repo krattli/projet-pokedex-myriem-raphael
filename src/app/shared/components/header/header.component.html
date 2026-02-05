@@ -1,30 +1,43 @@
 <header class="header">
-  <div class="header-left">
-    <a routerLink="/" class="logo">
-      <img src="https://play.pokemonshowdown.com/pokemonshowdownbeta.png" alt="Pokemon" class="logo-img">
-    </a>
-  </div>
-  
-  <nav class="header-nav">
-    <!-- Navigation principale déplacée vers les tabs sur la page home -->
-  </nav>
+  <div class="header-inner">
+    <!-- Logo pill -->
+    <div class="header-pill logo-pill">
+      <a routerLink="/" class="logo">
+        <div class="logo-mark">
+          <span class="logo-ball"></span>
+        </div>
+        <div class="logo-text">
+          <span class="logo-title">Pokédex</span>
+          <span class="logo-subtitle">Front</span>
+        </div>
+      </a>
+    </div>
 
-  <div class="header-right">
-    @if (authService.isLoggedIn()) {
-      <a routerLink="/profile" class="trainer-link">
-        <i class="fa fa-user-circle"></i>
-        <span class="trainer-name">{{ authService.currentTrainer()?.name }}</span>
-      </a>
-      <button class="nav-button logout-btn" (click)="logout()">
-        <i class="fa fa-sign-out"></i>
-      </button>
-    } @else {
-      <a routerLink="/login" class="nav-button">
-        <i class="fa fa-sign-in"></i> Connexion
-      </a>
-      <a routerLink="/register" class="nav-button register-btn">
-        <i class="fa fa-user-plus"></i> Inscription
-      </a>
-    }
+    <!-- Nav center -->
+    <div class="nav-center">
+      <app-pokedex-tabs [activeTab]="activeTab" />
+    </div>
+
+    <!-- Account pill -->
+    <div class="header-pill account-pill">
+      @if (authService.isLoggedIn()) {
+        <a routerLink="/profile" class="trainer-link">
+          <i class="fa fa-user-circle"></i>
+          <span class="trainer-name">{{ authService.currentTrainer()?.name }}</span>
+        </a>
+        <button class="account-button logout-btn" (click)="logout()" title="Se déconnecter">
+          <i class="fa fa-sign-out"></i>
+        </button>
+      } @else {
+        <a routerLink="/login" class="account-button">
+          <i class="fa fa-sign-in"></i>
+          <span>Connexion</span>
+        </a>
+        <a routerLink="/register" class="account-button account-button-primary">
+          <i class="fa fa-user-plus"></i>
+          <span>Inscription</span>
+        </a>
+      }
+    </div>
   </div>
 </header>
