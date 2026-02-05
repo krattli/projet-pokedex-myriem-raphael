@@ -1,6 +1,6 @@
 .page-container {
   min-height: 100%;
-  background: #e8e8e8;
+  background: transparent;
 }
 
 .page-content {
@@ -12,8 +12,8 @@
 .auth-required {
   text-align: center;
   padding: 60px 20px;
-  background: white;
-  border: 1px solid #ccc;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-subtle);
   border-radius: 8px;
 }
 
@@ -57,27 +57,27 @@
   align-items: center;
   gap: 6px;
   padding: 8px 16px;
-  background: linear-gradient(to bottom, #f8f8f8, #e0e0e0);
-  border: 1px solid #aaa;
+  background: linear-gradient(to bottom, var(--color-surface-soft), var(--color-primary-softest));
+  border: 1px solid var(--color-border-subtle);
   border-radius: 5px;
-  color: #555;
+  color: var(--color-text-main);
   font-size: 13px;
   cursor: pointer;
 }
 
 .tab-btn:hover {
-  background: linear-gradient(to bottom, #fff, #e8e8e8);
+  background: linear-gradient(to bottom, #ffffff, var(--color-primary-softest));
 }
 
 .tab-btn.active {
-  background: linear-gradient(to bottom, #6688aa, #4c6a8c);
-  color: white;
-  border-color: #3a5a7a;
+  background: linear-gradient(to bottom, var(--color-primary), #3d56d4);
+  color: #ffffff;
+  border-color: #3244a8;
 }
 
 .list-container {
-  background: white;
-  border: 1px solid #ccc;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-subtle);
   border-radius: 8px;
   overflow: hidden;
 }
@@ -87,8 +87,8 @@
   justify-content: space-between;
   align-items: center;
   padding: 12px 16px;
-  background: linear-gradient(to bottom, #f8f8f8, #eee);
-  border-bottom: 1px solid #ddd;
+  background: linear-gradient(to bottom, var(--color-surface-soft), var(--color-primary-softest));
+  border-bottom: 1px solid var(--color-border-subtle);
   gap: 16px;
 }
 
@@ -157,9 +157,9 @@
 .loading {
   text-align: center;
   padding: 60px;
-  color: #666;
-  background: white;
-  border: 1px solid #ccc;
+  color: var(--color-text-muted);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-subtle);
   border-radius: 8px;
 }
 
@@ -185,8 +185,8 @@
 .empty-state {
   text-align: center;
   padding: 60px 20px;
-  background: white;
-  border: 1px solid #ccc;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-subtle);
   border-radius: 8px;
 }
 

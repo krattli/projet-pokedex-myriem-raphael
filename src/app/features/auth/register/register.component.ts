@@ -46,7 +46,9 @@ export class RegisterComponent {
       password: this.password 
     }).subscribe({
       next: () => {
-        this.router.navigate(['/pokedex']);
+        // Après création de compte, on redirige vers la connexion
+        // pour éviter les 401 côté backend (session non encore établie)
+        this.router.navigate(['/login']);
       },
       error: (err) => {
         this.loading.set(false);

@@ -60,8 +60,18 @@ export class PokemonListComponent implements OnInit {
     const filtered = this.filteredPokemons();
     const key = this.sortKey();
     const desc = this.sortDesc();
+    const query = this.searchQuery().toLowerCase().trim();
 
     return [...filtered].sort((a, b) => {
+      // Prioriser les Pokémon dont le nom ou le numéro commence par la chaîne recherchée
+      if (query) {
+        const aStarts = a.name.toLowerCase().startsWith(query) || a.pokedexNumber.toString().startsWith(query);
+        const bStarts = b.name.toLowerCase().startsWith(query) || b.pokedexNumber.toString().startsWith(query);
+
+        if (aStarts && !bStarts) return -1;
+        if (!aStarts && bStarts) return 1;
+      }
+
       let aVal: any, bVal: any;
       
       if (key === 'bst') {
@@ -108,7 +118,7 @@ export class PokemonListComponent implements OnInit {
         this.loading.set(false);
         console.error('Error loading pokemons:', err);
         if (err.status === 401) {
-          this.error.set('Session expirée. Veuillez vous reconnecter.');
+          this.error.set('Vous devez être connecté pour accéder au Pokédex.');
         } else {
           this.error.set('Erreur lors du chargement des Pokémon.');
         }

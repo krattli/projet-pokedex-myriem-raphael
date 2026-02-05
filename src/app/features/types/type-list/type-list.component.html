@@ -19,13 +19,13 @@
     } @else {
       <app-searchable-list
         searchPlaceholder="Rechercher un type..."
-        [searchQuery]="searchQuery"
+        [searchQuery]="searchQuery()"
         [totalCount]="types().length"
         [filteredCount]="filteredTypes().length"
         itemLabel="Types"
         [columns]="columns"
-        [currentSort]="sortKey"
-        [sortDesc]="sortDesc"
+        [currentSort]="sortKey()"
+        [sortDesc]="sortDesc()"
         (searchChange)="onSearchChange($event)"
         (sortChange)="onSortChange($event)"
       >

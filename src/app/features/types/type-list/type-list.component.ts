@@ -24,9 +24,9 @@ export class TypeListComponent implements OnInit {
   types = signal<Type[]>([]);
   loading = signal(true);
   error = signal<string | null>(null);
-  searchQuery = '';
-  sortKey = 'name';
-  sortDesc = false;
+  searchQuery = signal('');
+  sortKey = signal<'name'>('name');
+  sortDesc = signal(false);
 
   columns: SortColumn[] = [
     { key: 'badge', label: 'Type', width: '80px', sortable: false },
@@ -34,7 +34,7 @@ export class TypeListComponent implements OnInit {
   ];
 
   filteredTypes = computed(() => {
-    const query = this.searchQuery.toLowerCase().trim();
+    const query = this.searchQuery().toLowerCase().trim();
     if (!query) return this.types();
     
     return this.types().filter(t => 
@@ -44,7 +44,7 @@ export class TypeListComponent implements OnInit {
 
   sortedTypes = computed(() => {
     const filtered = this.filteredTypes();
-    const desc = this.sortDesc;
+    const desc = this.sortDesc();
 
     return [...filtered].sort((a, b) => {
       return desc 
@@ -82,7 +82,7 @@ export class TypeListComponent implements OnInit {
         this.loading.set(false);
         console.error('Error loading types:', err);
         if (err.status === 401) {
-          this.error.set('Session expirée. Veuillez vous reconnecter.');
+          this.error.set('Vous devez être connecté pour voir les types.');
         } else {
           this.error.set('Erreur lors du chargement des types.');
         }
@@ -91,11 +91,11 @@ export class TypeListComponent implements OnInit {
   }
 
   onSearchChange(query: string): void {
-    this.searchQuery = query;
+    this.searchQuery.set(query);
   }
 
   onSortChange(event: { key: string; desc: boolean }): void {
-    this.sortKey = event.key;
-    this.sortDesc = event.desc;
+    this.sortKey.set(event.key as 'name');
+    this.sortDesc.set(event.desc);
   }
 }

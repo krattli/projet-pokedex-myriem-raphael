@@ -4,7 +4,9 @@ import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../../core/services/auth.service';
 import { TrainerService } from '../../../core/services/trainer.service';
 import { CaptureService } from '../../../core/services/capture.service';
-import { Trainer, TrainerStats, CaughtPokemon } from '../../../core/models';
+import { PokemonService } from '../../../core/services/pokemon.service';
+import { CacheService } from '../../../core/services/cache.service';
+import { Trainer, TrainerStats, CaughtPokemon, Pokemon } from '../../../core/models';
 
 @Component({
   selector: 'app-trainer-profile',
@@ -17,6 +19,8 @@ export class TrainerProfileComponent implements OnInit {
   private authService = inject(AuthService);
   private trainerService = inject(TrainerService);
   private captureService = inject(CaptureService);
+  private pokemonService = inject(PokemonService);
+  private cacheService = inject(CacheService);
   private router = inject(Router);
 
   trainer = signal<Trainer | null>(null);
@@ -39,9 +43,26 @@ export class TrainerProfileComponent implements OnInit {
     if (trainerId) {
       this.loadStats(trainerId);
       this.loadCaptures(trainerId);
+      this.ensurePokemonsLoaded();
     } else {
       this.loading.set(false);
     }
+  }
+
+  private ensurePokemonsLoaded(): void {
+    const cached = this.cacheService.getPokemons();
+    if (cached && cached.length > 0) {
+      return;
+    }
+
+    this.pokemonService.getAll().subscribe({
+      next: (pokemons) => {
+        this.cacheService.setPokemons(pokemons);
+      },
+      error: (err) => {
+        console.error('Erreur lors du chargement des Pokémon pour les stats du dresseur :', err);
+      }
+    });
   }
 
   loadStats(trainerId: number): void {
@@ -90,22 +111,43 @@ export class TrainerProfileComponent implements OnInit {
   }
 
   uniqueTypes(): number {
-    // Si on a les stats, utiliser uniquePokemons depuis les stats
-    // Sinon, essayer de calculer depuis les captures
     const stats = this.trainerStats();
-    if (stats) {
-      // Compter les types uniques depuis capturesByType
-      return Object.keys(stats.capturesByType || {}).length;
+    // 1) Si le backend fournit déjà la répartition par type, on lui fait confiance
+    if (stats && stats.capturesByType && Object.keys(stats.capturesByType).length > 0) {
+      return Object.keys(stats.capturesByType).length;
     }
-    
-    // Fallback : calculer depuis les captures si pokemon est chargé
-    const types = new Set<number>();
-    this.captures().forEach(c => {
-      if (c.pokemon?.types) {
-        c.pokemon.types.forEach(t => types.add(t.id));
+
+    // 2) Sinon on calcule côté front :
+    //    - d'abord avec les types déjà chargés sur les Pokémon des captures
+    //    - sinon en utilisant le Pokédex (qui, lui, est alimenté depuis PokéAPI côté backend)
+    const typeIds = new Set<number>();
+    const captures = this.captures();
+
+    // a) Types présents directement sur les captures (si le backend joint Pokémon + types)
+    captures.forEach(capture => {
+      if (capture.pokemon?.types) {
+        capture.pokemon.types.forEach(t => typeIds.add(t.id));
       }
     });
-    return types.size;
+
+    // b) Compléter à partir du Pokédex si besoin
+    const pokemonsFromCache: Pokemon[] | null =
+      this.cacheService.pokemonsCache() || this.cacheService.getPokemons();
+
+    if (pokemonsFromCache) {
+      const byId = new Map<number, Pokemon>();
+      pokemonsFromCache.forEach(p => byId.set(p.id, p));
+
+      captures.forEach(capture => {
+        const pid = capture.pokemonId ?? capture.pokemon?.id;
+        if (!pid) return;
+        const p = byId.get(pid);
+        if (!p) return;
+        p.types.forEach(t => typeIds.add(t.id));
+      });
+    }
+
+    return typeIds.size;
   }
 
   getSpriteUrl(pokedexNumber: number): string {

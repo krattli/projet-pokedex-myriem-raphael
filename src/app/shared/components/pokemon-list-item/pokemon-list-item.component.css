@@ -45,12 +45,12 @@
 
 .pokemonnamecol {
   flex: 1;
-  font-weight: bold;
+  font-weight: normal;
   min-width: 120px;
 }
 
 .pokemonnamecol .highlight {
-  color: #0066cc;
+  color: var(--color-primary);
   font-weight: bold;
   text-decoration: underline;
 }
