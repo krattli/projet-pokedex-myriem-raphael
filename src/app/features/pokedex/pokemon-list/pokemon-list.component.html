@@ -1,8 +1,7 @@
 <div class="page-container">
   <div class="page-content" [class.has-detail]="selectedPokemon()">
-    
+    <h2 class="page-title">Pokédex</h2>
     @if (!authService.isLoggedIn()) {
-      <app-pokedex-tabs activeTab="pokemon" />
       <div class="auth-required">
         <i class="fa fa-lock"></i>
         <h2>Connexion requise</h2>
@@ -10,12 +9,10 @@
         <a routerLink="/login" class="button primary">Se connecter</a>
       </div>
     } @else if (loading()) {
-      <app-pokedex-tabs activeTab="pokemon" />
       <div class="loading">
         <i class="fa fa-spinner fa-spin"></i> Chargement des Pokémon...
       </div>
     } @else if (error()) {
-      <app-pokedex-tabs activeTab="pokemon" />
       <div class="error-message">
         <i class="fa fa-exclamation-triangle"></i> {{ error() }}
       </div>
@@ -27,10 +24,8 @@
       }
 
       <div class="split-view" [class.has-detail]="selectedPokemon()">
-        <!-- Colonne gauche : Tabs + Liste -->
+        <!-- Colonne gauche : Liste -->
         <div class="list-column">
-          <app-pokedex-tabs activeTab="pokemon" />
-          
           <app-searchable-list
             searchPlaceholder="Rechercher par nom ou numéro..."
             [searchQuery]="searchQuery()"

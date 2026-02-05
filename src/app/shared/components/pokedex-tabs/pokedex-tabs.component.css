@@ -1,32 +1,47 @@
-.pokedex-header {
-  margin-bottom: 20px;
+.tabs-shell {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  padding: 2px;
+  border-radius: 999px;
+  border: 1px solid var(--color-border-subtle);
+  background: var(--color-surface);
+  overflow: hidden;
 }
 
-h1 {
-  text-align: center;
-  margin: 0 0 20px;
+.tabs-shell-inner {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  border-radius: inherit;
 }
 
-h1 a {
-  color: #333;
-  text-decoration: none;
-  font-family: Verdana, sans-serif;
+.tab-indicator {
+  position: absolute;
+  top: 2px;
+  bottom: 2px;
+  left: 0;
+  border-radius: 999px;
+  background: var(--color-primary);
+  transition: left 0.25s ease, width 0.25s ease;
+  z-index: 1;
 }
 
 .tabbar {
+  position: relative;
   display: flex;
-  justify-content: center;
   list-style: none;
   padding: 0;
-  margin: 0 0 18px;
+  margin: 0;
   gap: 0;
+  z-index: 2;
 }
 
 .tabbar li {
   flex-shrink: 0;
 }
 
-.tabbar .button {
+.tab-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -34,38 +49,61 @@ h1 a {
   /* Largeur fixe pour éviter les shifts */
   min-width: 110px;
   padding: 8px 16px;
-  background: linear-gradient(to bottom, #f8f8f8, #e0e0e0);
-  border: 1px solid #aaa;
-  color: #555;
+  background: transparent;
+  border: none;
+  color: var(--color-text-main);
   font-size: 13px;
   cursor: pointer;
-  border-radius: 0;
+  border-radius: 999px;
+  position: relative;
 }
 
-.tabbar .button span {
+.tab-button span {
   display: inline-block;
 }
 
-.tabbar .button.nav-first {
-  border-radius: 5px 0 0 5px;
-}
-
-.tabbar .button.nav-last {
-  border-radius: 0 5px 5px 0;
-}
-
-.tabbar .button:not(.nav-first) {
-  border-left: none;
-}
-
-.tabbar .button.cur {
-  background: linear-gradient(to bottom, #6688aa, #4c6a8c);
+.tab-button.cur {
   color: white;
-  border-color: #3a5a7a;
+  font-weight: 600;
 }
 
-.tabbar .button:hover:not(.cur) {
-  background: linear-gradient(to bottom, #eee, #ddd);
+.tab-button:hover:not(.cur) {
+  color: var(--color-primary);
+}
+
+/* Icône Pokéball pour l'onglet Pokédex */
+.pokeball-icon {
+  position: relative;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: linear-gradient(to bottom, var(--color-primary) 50%, #ffffff 50%);
+  border: 2px solid var(--color-text-main);
+  box-sizing: border-box;
+}
+
+.pokeball-icon::before {
+  content: '';
+  position: absolute;
+  left: -2px;
+  right: -2px;
+  top: 50%;
+  height: 2px;
+  background: var(--color-text-main);
+  transform: translateY(-50%);
+}
+
+.pokeball-icon::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 2px solid var(--color-text-main);
+  transform: translate(-50%, -50%);
 }
 
 .auth-notice {

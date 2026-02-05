@@ -39,7 +39,7 @@
           </div>
         } @else {
           <div class="name-display">
-            <h1>{{ trainer()?.name || 'Dresseur' }}</h1>
+        <h1>{{ trainer()?.name || 'Dresseur' }}</h1>
             <button class="btn-edit-name" (click)="startEditingName()" title="Modifier le pseudo">
               <i class="fa fa-pencil"></i>
             </button>
@@ -118,7 +118,7 @@
       @if (captures().length > 0) {
         <div class="recent-captures">
           <div class="captures-header">
-            <h2>Dernières captures</h2>
+          <h2>Dernières captures</h2>
             <a routerLink="/captures" class="view-all-link">
               Voir toutes <i class="fa fa-arrow-right"></i>
             </a>

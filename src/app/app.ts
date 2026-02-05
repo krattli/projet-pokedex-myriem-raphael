@@ -31,7 +31,7 @@ import { PokemonTcgService } from './core/services/pokemon-tcg.service';
 
     .main-content {
       flex: 1;
-      background: #e8e8e8;
+      background: transparent;
     }
   `]
 })

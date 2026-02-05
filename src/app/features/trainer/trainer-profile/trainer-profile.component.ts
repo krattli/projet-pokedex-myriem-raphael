@@ -53,7 +53,7 @@ export class TrainerProfileComponent implements OnInit {
         // Si les stats ne sont pas disponibles, on continue sans
       }
     });
-  }
+    }
 
   loadCaptures(trainerId: number): void {
     this.captureService.getByTrainer(trainerId).subscribe({
